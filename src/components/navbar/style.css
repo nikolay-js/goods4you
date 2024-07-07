@@ -1,4 +1,5 @@
 .nav {
+	flex: 0 0 auto;
 	padding: 23px 0;
 	background-color: var(--nav-bg);
 	color: var(--nav-text);
@@ -6,6 +7,7 @@
 }
 
 .footer {
+	flex: 0 0 auto;
 	background-color: var(--footer-bg);
 }
 

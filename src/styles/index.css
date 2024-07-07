@@ -30,14 +30,7 @@
 
 html,
 body {
-	min-height: 100vh;
-
 	font-family: 'Jost', sans-serif;
-	letter-spacing: -0.5px;
-}
-
-#root {
-	min-height: 100vh;
 }
 
 .App {
@@ -55,6 +48,7 @@ body {
 
 .section {
 	display: flex;
+	flex: 1 0 auto;
 	flex-direction: column;
 	align-items: center;
 	row-gap: 48px;
@@ -128,3 +122,25 @@ details[open] summary {
 .faq__details[open] .faq__summary img {
   transform: rotate(45deg);
 }
+
+/* Product page  */
+
+.product-page {
+	display: flex;
+	row-gap: 40px;
+}
+
+.product-page__content {
+	display: flex;
+	flex-direction: column;
+	column-gap: 24px;
+}
+/* .product-page__rating
+.product-page__rating-text
+.product-page__in-stock
+.product-page__description
+.product-page__warranty
+.product-page__buy
+.product-page__prices
+.product-page__current-price
+.product-page__price */
