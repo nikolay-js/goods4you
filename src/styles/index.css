@@ -1,0 +1,130 @@
+@import './reset.css';
+@import url('https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800&display=swap');
+
+:root {
+	--container-width: 1440px;
+	--container-padding: 130px;
+	/* Colors */
+	--primary: #484283;
+	--accent: #f14f4f;
+	--white: #fff;
+	--grey: #444b58;
+
+	/* Nav */
+	--nav-bg: var(--primary);
+	--nav-text: var(--white);
+
+	/* Header */
+	--header-bg: var(--primary);
+	--header-border: var(--white);
+	--header-text: var(--white);
+
+	--product-card-bg: var(--white);
+	--product-card-text: var(--grey);
+
+	--faq-bg: var(--primary);
+	--faq-text: var(--white);
+
+	--footer-bg: var(--grey);
+}
+
+html,
+body {
+	min-height: 100vh;
+
+	font-family: 'Jost', sans-serif;
+	letter-spacing: -0.5px;
+}
+
+#root {
+	min-height: 100vh;
+}
+
+.App {
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+}
+
+.container {
+	margin: 0 auto;
+	padding: 0 var(--container-padding);
+	max-width: var(--container-width);
+}
+
+.section {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	row-gap: 48px;
+	padding: 48px 0;
+}
+
+.title-1 {
+	font-size: 36px;
+	font-weight: 700;
+	width: 100%;
+	text-align: left;
+	color: var(--product-card-text);
+}
+
+/* Products  */
+
+.products {
+	display: flex;
+	justify-content: center;
+	flex-wrap: wrap;
+	column-gap: 35px;
+	row-gap: 20px;
+}
+
+/* FAQ  */
+
+.faq {
+	padding: 60px 390px ;
+	background-color: var(--faq-bg);
+}
+
+.faq__title {
+	margin-bottom: 20px;
+	font-size: 36px;
+	font-weight: 700;
+	color: var(--faq-text);
+}
+
+.faq__details {
+  position: relative;
+	padding: 20px 0;
+	font-weight: 400;
+	font-size: 20px;
+	line-height: 150%;
+	color: #fff;
+	border-top: 1px solid #fff;
+}
+
+.faq__details:last-child {	
+	border-bottom: 1px solid #fff;
+}
+
+.faq__summary {
+	display: flex;
+	justify-content: space-between;
+	list-style: none;
+	font-weight: 600;
+	font-size: 16px;
+	line-height: 162%;
+	color: #fff;
+}
+
+details summary::-webkit-details-marker {
+  display: none
+}
+
+details[open] summary {  
+	padding-bottom: 20px;
+}
+
+.faq__details[open] .faq__summary img {
+  transform: rotate(45deg);
+}

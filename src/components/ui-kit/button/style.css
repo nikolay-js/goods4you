@@ -1,0 +1,19 @@
+.btn {
+	padding: 20px 50px;
+
+	border-radius: 4px;
+	background-color: var(--accent);
+	color: var(--white);
+	font-size: 16px;
+	font-weight: 400;
+	z-index: 1;
+}
+
+.btn:hover {
+	background-color: #8c2828;;
+}
+
+.btn:active {
+	position: relative;
+	top: 1px;
+}
