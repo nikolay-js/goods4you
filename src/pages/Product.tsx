@@ -5,13 +5,13 @@ const Product: React.FC = () => {
     <main className="section">
       <div className="container">
         <div className="product-page">
-          <img src="./../../assets/img/galery.png" alt="Carousel" />
+          <img src="/src/assets/img/galery.png" alt="Carousel" />
           <div className="product-page__content">
             <div className="product-page__title">
               <h2 className="title-1">Essence Mascara Lash Princess</h2>
-              <div className="product__rating">
-                <img src="./../../assets/icons/rating.svg" alt="Stars rating" />
-                <span className="product__rating-text">electronics, selfie accessories</span>
+              <div className="product-page__rating">
+                <img src="/src/assets/icons/rating.svg" alt="Stars rating" />
+                <span className="product-page__rating-text">electronics, selfie accessories</span>
               </div>
             </div>
             <div className="product-page__in-stock">In Stock - Only 5 left!</div>
@@ -21,11 +21,15 @@ const Product: React.FC = () => {
               <p>Ships in 1 month</p>
             </div>
             <div className="product-page__buy">
-              <div className="product__prices">
-                <p className="product__current-price">7.17$</p>
-                <p className="product__price">9.99$</p>
+              <div className="product-page__prices">
+                <p className="product-page__current-price">7.17$</p>
+                <p className="product-page__price">9.99$</p>
               </div>
-              <Button type="button">Add to cart</Button>
+              <div className="product-page__discount">
+                <p className="product-page__discount-text">Your discount:</p>
+                <p className="product-page__discount-value">14.5%</p>
+              </div>
+              <Button type="button" className="product-page__btn">Add to cart</Button>
             </div>
           </div>
         </div>
