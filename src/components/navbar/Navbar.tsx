@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 
 import './style.css';
 
@@ -20,20 +20,20 @@ const Navbar: React.FC<INavbarProps> = ({ footer }) => {
 
           <ul className="nav-list">
             <li className="nav-list__item">
-              {/* <NavLink
-                to="catalog"
+              <NavLink
+                to={{ pathname: "/", hash: "#catalog" }}
                 className={({ isActive }) =>
-                  isActive ? activeLink : normalLink
+                  isActive && location.hash == "#catalog" ? activeLink : normalLink
                 }
-              > */}
-                <a href="#catalog">Catalog</a>
-							{/* </NavLink> */}
+              >
+                Catalog
+							</NavLink>
             </li>
             <li className="nav-list__item">
               <NavLink
-                to="/#faq"
+                to={{ pathname: "/", hash: "#faq" }}
                 className={({ isActive }) =>
-                  isActive ? activeLink : normalLink
+                  isActive && location.hash == "#faq" ? activeLink : normalLink
                 }
               >
                 FAQ
