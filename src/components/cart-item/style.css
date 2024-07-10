@@ -101,7 +101,7 @@ button.cart-item__btn {
   font-weight: 400;
   font-size: 14px;
   line-height: 143%;
-  color: var(--product-card-text);
+  color: var(--cart-page-text);
 }
 
 .cart-item__delete-btn:hover {
