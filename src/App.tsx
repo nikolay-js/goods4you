@@ -1,5 +1,9 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
+import { useAppDispatch, useAppSelector } from "./hooks/redux";
+import { useEffect, useState } from "react";
+import { fetchUserCart } from "./redux/reducers/cartsSlice";
+
 import Navbar from './components/navbar/Navbar';
 import Home from "./pages/Home";
 import Product from "./pages/Product";
@@ -11,11 +15,22 @@ import NotFound from "./pages/NotFound";
 import './styles/index.css';
 
 function App() {
+  const dispatch = useAppDispatch();
+  const { carts, isLoading, error } = useAppSelector((state) => state.cartReducer);
+  const cart = carts?.carts?.[0] ?? [];
+  const { totalQuantity = '' } = cart;
+
+  useEffect(() => {
+    dispatch(fetchUserCart());
+  }, []);
+
   return (
     <div className="App">
+      {isLoading && <h1>Is loading...</h1>}
+      {error && <h1>{error}</h1>}
       <Router>
         <ScrollToAnchor />
-        <Navbar />
+        <Navbar totalQuantity={totalQuantity} />
         <Routes>
           <Route
             path="/"
@@ -27,20 +42,15 @@ function App() {
             }
           />
           <Route
-            path="/product/11"
-            element={
-              <>
-                <PageTitle title="Essence Mascara Lash Princess | Goods4you" />
-                <Product />
-              </>
-            }
+            path="/product/:id"
+            element={<Product />}
           />
           <Route
             path="/cart"
             element={
               <>
                 <PageTitle title="My cart | Goods4you" />
-                <Cart />
+                <Cart cart={cart} />
               </>
             }
           />

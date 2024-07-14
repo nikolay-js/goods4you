@@ -4,10 +4,10 @@ import { IProduct } from '../../types';
 
 import './style.css';
 
-const CartItem: React.FC<IProduct> = ({ title, img, id, price, quantity }) => (
+const CartItem: React.FC<IProduct> = ({ title, thumbnail, id, price, quantity }) => (
   <li className="cart-item">
     <figure className="cart-item__content">
-      <img src={img} alt={title} />
+      <img src={thumbnail} alt={title} />
       <figcaption className="cart-item__img-caption">
         <NavLink to={`/product/${id}`} className="cart-item__title">
           <h4 className="cart-item__text">{title}</h4>
@@ -21,7 +21,7 @@ const CartItem: React.FC<IProduct> = ({ title, img, id, price, quantity }) => (
           <Button type="button" className="cart-item__btn">
             <img src="src/assets/icons/-.svg" alt="- button" />
           </Button>
-          <div className="cart-item__quantity">{quantity} item</div>
+          <div className="cart-item__quantity">{quantity} {`${quantity>1 ? 'items' : 'item'}`}</div>
           <Button type="button" className="cart-item__btn">
             <img src="src/assets/icons/+.svg" alt="+ button" />
           </Button>

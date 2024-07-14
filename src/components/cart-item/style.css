@@ -24,6 +24,7 @@
 
 .cart-item__content img {
   border-radius: 4px;
+  max-width: 100px;
 }
 
 .cart-item__img-caption {

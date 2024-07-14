@@ -1,13 +1,14 @@
 import { NavLink } from 'react-router-dom';
-import './style.css';
 import Button from '../ui-kit/button/Button';
 import { IProduct } from '../../types';
 
-const Product: React.FC<IProduct> = ({ title, img, id, price, quantity }) => (
+import './style.css';
+
+const Product: React.FC<IProduct> = ({ title, thumbnail, id, price, quantity }) => (
   <li className="product">
     <figure className="product__img">
       <NavLink to={`/product/${id}`}>
-        <img src={img} alt={title} />
+        <img src={thumbnail} alt={title} />
         <p className="product__img-overlay">Show details</p>
       </NavLink>
     </figure>

@@ -1,40 +1,62 @@
 import Button from "../components/ui-kit/button/Button"
+import { productsApi } from "../redux/services/productsApi";
+import { useParams, useNavigate } from "react-router-dom";
+import { IProduct } from "../types";
+import PageTitle from "../components/page-title/PageTitle";
 
 const Product: React.FC = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { data = [], error, isLoading, isSuccess, status } = productsApi.useGetProductsByIdQuery({ id });
+  const product: IProduct = data;
+  const discountValue = ((product.price - product?.discountPercentage) * 100 / product.price).toFixed(2);
+  
+  if (status === 'rejected') {
+    navigate('/*');
+  }
+
   return (
-    <main className="section">
-      <div className="container">
-        <div className="product-page">
-          <img src="/src/assets/img/galery.png" alt="Carousel" />
-          <div className="product-page__content">
-            <div className="product-page__title">
-              <h2 className="title-1">Essence Mascara Lash Princess</h2>
-              <div className="product-page__rating">
-                <img src="/src/assets/icons/rating.svg" alt="Stars rating" />
-                <span className="product-page__rating-text">electronics, selfie accessories</span>
-              </div>
+    <>
+      {isSuccess && <PageTitle title={`${product.title} | Goods4you`} />}
+      <main className="section">
+        <div className="container">
+          {isLoading && <h2>Is loading...</h2>}
+          {error && <h2>{error}</h2>}
+          {isSuccess && <div className="product-page">
+            <div className="product-page__galery">
+              <img src={product.images[0]} alt="Carousel" />
             </div>
-            <div className="product-page__in-stock">In Stock - Only 5 left!</div>
-            <p className="product-page__description">The Essence Mascara Lash Princess is a popular mascara known for its volumizing and lengthening effects. Achieve dramatic lashes with this long-lasting and cruelty-free formula.</p>
-            <div className="product-page__warranty">
-              <p>1 month warranty</p>
-              <p>Ships in 1 month</p>
-            </div>
-            <div className="product-page__buy">
-              <div className="product-page__prices">
-                <p className="product-page__current-price">7.17$</p>
-                <p className="product-page__price">9.99$</p>
+            <div className="product-page__content">
+              <div className="product-page__title">
+                <h2 className="title-1">{product.title}</h2>
+                <div className="product-page__rating">
+                  <img src="/src/assets/icons/rating.svg" alt="Stars rating" />
+                  <span className="product-page__rating-text">{product?.tags.join(' ')}</span>
+                </div>
               </div>
-              <div className="product-page__discount">
-                <p className="product-page__discount-text">Your discount:</p>
-                <p className="product-page__discount-value">14.5%</p>
+              <div className="product-page__in-stock">In Stock - Only {product?.stock} left!</div>
+              <p className="product-page__description">{product?.description}</p>
+              <div className="product-page__warranty">
+                <p>{product?.warrantyInformation}</p>
+                <p>{product?.shippingInformation}</p>
               </div>
-              <Button type="button" className="product-page__btn">Add to cart</Button>
+              <div className="product-page__buy">
+                <div className="product-page__prices">
+                  <p className="product-page__current-price">{product?.discountPercentage}$</p>
+                  <p className="product-page__price">{product.price}$</p>
+                </div>
+                <div className="product-page__discount">
+                  <p className="product-page__discount-text">Your discount:</p>
+                  <p className="product-page__discount-value">{discountValue}%</p>
+                </div>
+                <Button type="button" className="product-page__btn">Add to cart</Button>
+              </div>
             </div>
           </div>
+          }
         </div>
-      </div>
-    </main>
+      </main>
+    </>
   );
 }
 

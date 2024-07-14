@@ -136,6 +136,10 @@ details[open] summary {
 	column-gap: 40px;
 }
 
+.product-page__galery {
+	max-width: 520px;
+}
+
 .product-page__content {
 	display: flex;
 	flex-direction: column;

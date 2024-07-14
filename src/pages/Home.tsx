@@ -2,84 +2,28 @@ import Header from "../components/header/Header";
 import Product from "../components/product/Product";
 import Input from "../components/ui-kit/input/Input";
 import Button from "../components/ui-kit/button/Button";
-
-const mockedProducts = [
-	{
-		id: 0,
-		title: 'Essence Mascara Lash Princess',
-		img: 'src/assets/img/product.png',
-		price: 110,
-	},
-	{
-		id: 1,
-		title: 'Essence Mascara Lash Princess',
-		img: 'src/assets/img/product.png',
-		price: 110,
-	},
-	{
-		id: 2,
-		title: 'Essence Mascara Lash Princess',
-		img: 'src/assets/img/product.png',
-		price: 110,
-	},
-	{
-		id: 3,
-		title: 'Essence Mascara Lash Princess',
-		img: 'src/assets/img/product.png',
-		price: 110,
-	},
-	{
-		id: 4,
-		title: 'Essence Mascara Lash Princess',
-		img: 'src/assets/img/product.png',
-		price: 110,
-	},
-	{
-		id: 5,
-		title: 'Essence Mascara Lash Princess',
-		img: 'src/assets/img/product.png',
-		price: 110,
-		quantity: 1,
-	},
-	{
-		id: 6,
-		title: 'Essence Mascara Lash Princess',
-		img: 'src/assets/img/product.png',
-		price: 110,
-	},
-	{
-		id: 7,
-		title: 'Essence Mascara Lash Princess',
-		img: 'src/assets/img/product.png',
-		price: 110,
-	},
-	{
-		id: 8,
-		title: 'Essence Mascara Lash Princess',
-		img: 'src/assets/img/product.png',
-		price: 110,
-	},
-	{
-		id: 9,
-		title: 'Essence Mascara Lash Princess',
-		img: 'src/assets/img/product.png',
-		price: 110,
-	},
-	{
-		id: 10,
-		title: 'Essence Mascara Lash Princess',
-		img: 'src/assets/img/product.png',
-		price: 110,
-	},
-	{
-		id: 11,
-		title: 'Essence Mascara Lash Princess',
-		img: 'src/assets/img/product.png',
-		price: 110,
-	},
-];
+import { IProduct } from "../types";
+import { useState } from "react";
+import { productsApi } from "../redux/services/productsApi";
+import useDebounce from "../hooks/useDebounce";
 
 const Home: React.FC = () => {
+	const [limit, setLimit] = useState(12);
+	const [search, setSearch] = useState('');
+	const [searchTerm, setSearchTerm] = useState('');
+	const { data, error, isLoading, isSuccess } = productsApi.useFetchProductsQuery({ search, limit });
+	const products: Array<IProduct> = data?.products ?? [];
+	const totalProducts = data?.total ?? '';
+	const limitProducts = data?.limit ?? '';
+
+	useDebounce(() => {
+		setSearch(searchTerm);
+	}, [searchTerm], 800);
+
+	const handleInputSearch = (e) => {
+		setSearchTerm(e.target.value);
+	}
+
 	return (
 		<>
 			<Header />
@@ -87,14 +31,16 @@ const Home: React.FC = () => {
 				<section id="catalog" className="container">
 					<div className="section">
 						<h2 className="title-1">Catalog</h2>
-						<Input type="search" placeholder="Search by title" />
+						<Input type="search" placeholder="Search by title" value={searchTerm || ''} onChange={handleInputSearch} />
 						<ul className="products">
-							{mockedProducts.map((product, id) => { // TODO: change to products from api
+						{isLoading && <p>Is loading...</p>}
+						{error && <p>{error}</p>}
+							{isSuccess && products.map((product, id) => {
 								return (
 									<Product
 										key={id}
 										title={product.title}
-										img={product.img}
+										thumbnail={product.thumbnail}
 										price={product.price}
 										quantity={product.quantity}
 										id={id}
@@ -102,7 +48,7 @@ const Home: React.FC = () => {
 								);
 							})}
 						</ul>
-						<Button>Show more</Button>
+						{(totalProducts !== limitProducts) && <Button onClick={() => setLimit(limit + 12)}>Show more</Button>}
 					</div>
 				</section>
 				<section id="faq" className="faq">

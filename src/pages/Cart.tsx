@@ -1,36 +1,18 @@
 import CartItem from "../components/cart-item/CartItem";
+import { IProduct } from "../types";
 
-const mockedCartItems = [
-	{
-		id: 0,
-		title: 'Essence Mascara Lash Princess',
-		img: 'src/assets/img/cart-item.png',
-		price: 110,
-		quantity: 1,
-	},
-	{
-		id: 1,
-		title: 'Essence Mascara Lash Princess',
-		img: 'src/assets/img/cart-item.png',
-		price: 110,
-		quantity: 1,
-	},
-	{
-		id: 2,
-		title: 'Essence Mascara Lash Princess',
-		img: 'src/assets/img/cart-item.png',
-		price: 110,
-		quantity: 5,
-	},
-	{
-		id: 3,
-		title: 'Essence Mascara Lash Princess',
-		img: 'src/assets/img/cart-item.png',
-		price: 110,
-	},
-];
+interface ICartProps {
+  cart: {
+    products: Array<IProduct>,
+    totalQuantity: number,
+    discountedTotal: number,
+    total: number,
+  },
+};
 
-const Cart: React.FC = () => {
+const Cart: React.FC<ICartProps> = ({ cart }) => {
+  const { products, totalQuantity, discountedTotal, total } = cart;
+  
   return (
     <main className="section">
       <div className="container">
@@ -38,15 +20,15 @@ const Cart: React.FC = () => {
           <h2 className="title-1">My cart</h2>
           <div className="cart-page__content">
             <ul className="cart-page__items">
-              {mockedCartItems.map((cartItem, id) => { // TODO: change to products from api
+              {products.map((cartItem, id) => {
                 return (
                   <CartItem
                     key={id}
                     title={cartItem.title}
-                    img={cartItem.img}
+                    thumbnail={cartItem.thumbnail}
                     price={cartItem.price}
                     quantity={cartItem.quantity}
-                    id={11} // TODO: change
+                    id={cartItem.id}
                   />
                 );
               })}
@@ -55,16 +37,16 @@ const Cart: React.FC = () => {
               <div className="total__common">
                 <div className="total__common-item">
                   <div className="common-item__count">Total count</div>
-                  <div className="common-item__count-value">3 items</div>
+                  <div className="common-item__count-value">{totalQuantity} items</div>
                 </div>
                 <div className="total__common-item">
                   <div className="common-item__price">Price without discount</div>
-                  <div className="common-item__price-value">700$</div>
+                  <div className="common-item__price-value">{total}$</div>
                 </div>
               </div>
               <div className="total__item">
                 <div className="total__item-price">Total price</div>
-                <div className="total__item-value">590$</div>
+                <div className="total__item-value">{discountedTotal}$</div>
               </div>
             </div>
           </div>
