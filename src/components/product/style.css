@@ -1,5 +1,5 @@
 .product {
-	max-width: 370px;
+	width: 370px;
 	background-color: var(--product-card-bg);
 }
 

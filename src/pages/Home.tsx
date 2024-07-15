@@ -1,9 +1,9 @@
+import { useState, ChangeEvent } from "react";
 import Header from "../components/header/Header";
 import Product from "../components/product/Product";
 import Input from "../components/ui-kit/input/Input";
 import Button from "../components/ui-kit/button/Button";
 import { IProduct } from "../types";
-import { useState } from "react";
 import { productsApi } from "../redux/services/productsApi";
 import useDebounce from "../hooks/useDebounce";
 
@@ -20,7 +20,7 @@ const Home: React.FC = () => {
 		setSearch(searchTerm);
 	}, [searchTerm], 800);
 
-	const handleInputSearch = (e) => {
+	const handleInputSearch = (e: ChangeEvent<HTMLInputElement>) => {
 		setSearchTerm(e.target.value);
 	}
 
@@ -43,7 +43,7 @@ const Home: React.FC = () => {
 										thumbnail={product.thumbnail}
 										price={product.price}
 										quantity={product.quantity}
-										id={id}
+										id={product.id}
 									/>
 								);
 							})}
