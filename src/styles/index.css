@@ -137,7 +137,27 @@ details[open] summary {
 }
 
 .product-page__galery {
+	display: flex;
+	flex-direction: column;
+	row-gap: 10px;
 	max-width: 520px;
+}
+
+.galery__scroll {
+	display: flex;
+	column-gap: 20px;
+}
+
+.galery__scroll-item,
+.galery__scroll-item--active {
+	width: 70px;
+	height: 70px;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+.galery__scroll-item--active {
+	border: 3px solid #c4c4c4;
 }
 
 .product-page__content {

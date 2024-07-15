@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import Button from "../components/ui-kit/button/Button"
 import { productsApi } from "../redux/services/productsApi";
 import { useParams, useNavigate } from "react-router-dom";
@@ -10,10 +11,15 @@ const Product: React.FC = () => {
   const { data = [], error, isLoading, isSuccess, status } = productsApi.useGetProductsByIdQuery({ id });
   const product: IProduct = data;
   const discountValue = ((product.price - product?.discountPercentage) * 100 / product.price).toFixed(2);
-  
+  const [mainImg, setMainImg] = useState<string>('');
+
   if (status === 'rejected') {
     navigate('/*');
   }
+
+  useEffect(() => {
+    setMainImg(product?.images?.[0]);
+  }, [product?.images?.[0]]);
 
   return (
     <>
@@ -24,7 +30,19 @@ const Product: React.FC = () => {
           {error && <h2>{error}</h2>}
           {isSuccess && <div className="product-page">
             <div className="product-page__galery">
-              <img src={product.images[0]} alt="Carousel" />
+              <img src={mainImg} alt="Main image of galery" />
+              {product.images.length > 1 &&
+                <ul className="galery__scroll">
+                  {product.images.map((image, index) => (
+                    <img
+                      key={index}
+                      className={`galery__scroll-item${image === mainImg ? '--active' : ''}`}
+                      src={image}
+                      onClick={() => setMainImg(image)}
+                      alt="Item image of galery" />
+                  ))}
+                </ul>
+              }
             </div>
             <div className="product-page__content">
               <div className="product-page__title">
