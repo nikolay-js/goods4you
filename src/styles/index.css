@@ -79,6 +79,12 @@ body {
 	row-gap: 20px;
 }
 
+.products__show-more-btn {
+	width: 207px;
+	height: 62px;
+}
+
+
 /* FAQ  */
 
 .faq {
@@ -344,4 +350,41 @@ details[open] summary {
 	font-size: 24px;
 	line-height: 150%;
 	color: var(--grey);
+}
+
+/* Login page */
+
+.login {
+	display: flex;
+	flex-direction: column;
+	row-gap: 48px;
+	padding-top: 44px;
+}
+
+.login .title-1 {
+	text-align: center;
+}
+
+.login__form {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	row-gap: 60px;
+	padding: 60px;
+	width: 600px;
+	border-radius: 4px;
+	border: 1px solid #c4c4c4;
+}
+
+.login__form-btn {
+	width: 177px;
+	height: 62px;
+}
+
+.login__form-error {
+	position: absolute;
+	left: 60px;
+	bottom: 150px;
+	color: var(--accent);
 }

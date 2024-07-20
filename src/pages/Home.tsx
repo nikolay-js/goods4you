@@ -1,17 +1,21 @@
-import { useState, ChangeEvent } from "react";
+import { useState, ChangeEvent, useEffect } from "react";
 import Header from "../components/header/Header";
 import Product from "../components/product/Product";
 import Input from "../components/ui-kit/input/Input";
 import Button from "../components/ui-kit/button/Button";
 import { IProduct } from "../types";
-import { productsApi } from "../redux/services/productsApi";
+import { useFetchProductsQuery } from "../redux/services/productsApi";
 import useDebounce from "../hooks/useDebounce";
 
-const Home: React.FC = () => {
+interface IHome {
+	me: string,
+};
+
+const Home: React.FC<IHome> = ({ me }) => {
 	const [limit, setLimit] = useState(12);
 	const [search, setSearch] = useState('');
 	const [searchTerm, setSearchTerm] = useState('');
-	const { data, error, isLoading, isSuccess } = productsApi.useFetchProductsQuery({ search, limit });
+	const { data, error, isLoading, isFetching, isSuccess, isError } = useFetchProductsQuery({ search, limit, authorization: me });
 	const products: Array<IProduct> = data?.products ?? [];
 	const totalProducts = data?.total ?? '';
 	const limitProducts = data?.limit ?? '';
@@ -24,6 +28,10 @@ const Home: React.FC = () => {
 		setSearchTerm(e.target.value);
 	}
 
+  useEffect(() => {
+    if (isError) alert(error?.data?.message);
+  }, [isError]);
+
 	return (
 		<>
 			<Header />
@@ -33,8 +41,7 @@ const Home: React.FC = () => {
 						<h2 className="title-1">Catalog</h2>
 						<Input type="search" placeholder="Search by title" value={searchTerm || ''} onChange={handleInputSearch} />
 						<ul className="products">
-						{isLoading && <p>Is loading...</p>}
-						{error && <p>{error}</p>}
+						{isLoading && <p>is loading...</p>}
 							{isSuccess && products.map((product, id) => {
 								return (
 									<Product
@@ -48,7 +55,7 @@ const Home: React.FC = () => {
 								);
 							})}
 						</ul>
-						{(totalProducts !== limitProducts) && <Button onClick={() => setLimit(limit + 12)}>Show more</Button>}
+						{(totalProducts !== limitProducts) && <Button disabled={isLoading || isFetching} onClick={() => setLimit(limit + 12)}>Show more</Button>}
 					</div>
 				</section>
 				<section id="faq" className="faq">

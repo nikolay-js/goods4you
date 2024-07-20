@@ -7,18 +7,29 @@ export const productsApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: 'https://dummyjson.com' }),
   tagTypes: ['Products'],
   endpoints: (builder) => ({
-    fetchProducts: builder.query<IProduct[], { search: string, limit: number }>({
-      query: ({ search = '', limit = 12 }) => ({
+    fetchProducts: builder.query<IProduct[], { search: string, limit: number, authorization: string }>({
+      query: ({ search = '', limit = 12, authorization }) => ({
         url: `/products/search`,
+        headers: {
+          'Authorization': `Bearer ${authorization}`,
+          'Content-Type': 'application/json'
+        },
         params: {
           q: search,
           limit,
         }
       }),
-      providesTags: result => ['Products']
+      providesTags: ['Products']
     }),
-    getProductsById: builder.query<IProduct[], { id: string }>({
-      query: ({ id }) => `products/${id}`,
+    getProductsById: builder.query<IProduct[], { id: string, authorization: string }>({
+      query: ({ id, authorization }) => ({
+        url: `products/${id}`,
+        headers: {
+          'Authorization': `Bearer ${authorization}`,
+          'Content-Type': 'application/json'
+        },
+      }),
+      providesTags: ['Products']
     }),
   }),
 });

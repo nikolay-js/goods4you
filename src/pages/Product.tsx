@@ -1,33 +1,40 @@
 import { useState, useEffect } from "react";
 import Button from "../components/ui-kit/button/Button"
-import { productsApi } from "../redux/services/productsApi";
+import { useGetProductsByIdQuery } from "../redux/services/productsApi";
 import { useParams, useNavigate } from "react-router-dom";
 import { IProduct } from "../types";
 import PageTitle from "../components/page-title/PageTitle";
 
-const Product: React.FC = () => {
+interface IProductPage {
+	me: string,
+};
+
+const Product: React.FC<IProductPage> = ({ me }) => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { data = [], error, isLoading, isSuccess, status } = productsApi.useGetProductsByIdQuery({ id });
+  const { data = [], error, isLoading, isSuccess, isError, status } = useGetProductsByIdQuery({ id, authorization: me });
   const product: IProduct = data;
   const discountValue = ((product.price - product?.discountPercentage) * 100 / product.price).toFixed(2);
   const [mainImg, setMainImg] = useState<string>('');
 
-  if (status === 'rejected') {
-    navigate('/*');
-  }
-
+  useEffect(() => {
+    if (status === 'rejected') navigate('/*');
+  }, [status]);
+  
   useEffect(() => {
     setMainImg(product?.images?.[0]);
   }, [product?.images?.[0]]);
+
+  useEffect(() => {
+    if (isError) alert(error?.data?.message);
+  }, [isError]);
 
   return (
     <>
       {isSuccess && <PageTitle title={`${product.title} | Goods4you`} />}
       <main className="section">
         <div className="container">
-          {isLoading && <h2>Is loading...</h2>}
-          {error && <h2>{error}</h2>}
+          {isLoading && <h2>is loading...</h2>}
           {isSuccess && <div className="product-page">
             <div className="product-page__galery">
               <img src={mainImg} alt="Main image of galery" />

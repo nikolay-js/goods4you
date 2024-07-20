@@ -1,7 +1,6 @@
-import { NavLink, Link } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 
 import './style.css';
-import { useAppSelector } from '../../hooks/redux';
 
 interface INavbarProps {
   footer?: boolean;
@@ -11,6 +10,7 @@ interface INavbarProps {
 const Navbar: React.FC<INavbarProps> = ({ footer, totalQuantity }) => {
   const activeLink = 'nav-list__link nav-list__link--active';
   const normalLink = 'nav-list__link';
+  const location = useLocation();
 
   return (
     <nav className={`nav${footer ? ' footer' : ''}`}>
@@ -20,7 +20,7 @@ const Navbar: React.FC<INavbarProps> = ({ footer, totalQuantity }) => {
             Goods4you
 					</NavLink>
 
-          <ul className="nav-list">
+          <ul className={`nav-list${location.pathname.substr(1) === 'login' ? ' login-page' : ''}`}>
             <li className="nav-list__item">
               <NavLink
                 to={{ pathname: "/", hash: "#catalog" }}

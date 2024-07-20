@@ -1,7 +1,7 @@
+import { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import { useAppDispatch, useAppSelector } from "./hooks/redux";
-import { useEffect, useState } from "react";
 import { fetchUserCart } from "./redux/reducers/cartsSlice";
 
 import Navbar from './components/navbar/Navbar';
@@ -11,49 +11,68 @@ import Cart from "./pages/Cart";
 import ScrollToAnchor from "./utils/scrollToAnchor";
 import PageTitle from "./components/page-title/PageTitle";
 import NotFound from "./pages/NotFound";
+import Login from "./pages/Login";
+import PrivateRoute from "./components/private-route/PrivateRoute";
 
 import './styles/index.css';
 
 function App() {
   const dispatch = useAppDispatch();
-  const { carts, isLoading, error } = useAppSelector((state) => state.cartReducer);
+  const { carts, isLoading, isError, error } = useAppSelector((state) => state.cartReducer);
   const cart = carts?.carts?.[0] ?? [];
   const { totalQuantity = '' } = cart;
+  const me = JSON.parse(localStorage.getItem('goods4you') || '{}');
+  const isMe = Object.keys(me).length > 0;
+  const [isAuth, setIsAuth] = useState<boolean>(isMe);
 
   useEffect(() => {
-    dispatch(fetchUserCart());
-  }, []);
+    if (isAuth) dispatch(fetchUserCart());
+  }, [isAuth]);
+
+  useEffect(() => {
+    if (isError) alert(error?.data?.message);
+  }, [isError]);
 
   return (
     <div className="App">
-      {isLoading && <h1>Is loading...</h1>}
-      {error && <h1>{error}</h1>}
+      {isLoading && <h1>is loading...</h1>}
       <Router>
         <ScrollToAnchor />
         <Navbar totalQuantity={totalQuantity} />
         <Routes>
-          <Route
-            path="/"
+          {(!isMe || !isAuth) && <Route
+            path="/login"
             element={
               <>
-                <PageTitle title="Catalog | Goods4you" />
-                <Home />
+                <PageTitle title="Sign in | Goods4you" />
+                <Login setIsAuth={setIsAuth} />
               </>
             }
-          />
-          <Route
-            path="/product/:id"
-            element={<Product />}
-          />
-          <Route
-            path="/cart"
-            element={
-              <>
-                <PageTitle title="My cart | Goods4you" />
-                <Cart cart={cart} />
-              </>
-            }
-          />
+          />}
+          <Route element={<PrivateRoute me={me} isMe={isMe} isAuth={isAuth} setIsAuth={setIsAuth} />}>
+            <Route
+              path="/"
+              element={
+                <>
+                  <PageTitle title="Catalog | Goods4you" />
+                  <Home me={me} />
+                </>
+              }
+            />
+            <Route
+              path="/product/:id"
+              element={<Product me={me} />}
+            />
+            <Route
+              path="/cart"
+              element={
+                <>
+                  <PageTitle title="My cart | Goods4you" />
+                  <Cart cart={cart} />
+                </>
+              }
+            />
+          </Route>
           <Route
             path="/*"
             element={
@@ -64,10 +83,12 @@ function App() {
             }
           />
         </Routes>
-        <Navbar key="footer" footer />
+        <footer>
+          <Navbar key="footer" footer />
+        </footer>
       </Router>
     </div>
   );
 }
 
-export default App
+export default App;

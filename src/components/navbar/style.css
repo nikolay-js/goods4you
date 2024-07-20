@@ -62,6 +62,10 @@
   line-height: 143%;
 }
 
+.nav-list.login-page {
+	display: none;
+}
+
 .nav-list__item-cart {
   display: flex;
   column-gap: 6px;
