@@ -18,16 +18,16 @@ import './styles/index.css';
 
 function App() {
   const dispatch = useAppDispatch();
-  const { carts, isLoading, isError, error } = useAppSelector((state) => state.cartReducer);
-  const cart = carts?.carts?.[0] ?? [];
+  const { carts, userId, isLoading, isError, error } = useAppSelector((state) => state.cartReducer);
+  const cart = carts?.[0] ?? [];
   const { totalQuantity = '' } = cart;
   const me = JSON.parse(localStorage.getItem('goods4you') || '{}');
   const isMe = Object.keys(me).length > 0;
   const [isAuth, setIsAuth] = useState<boolean>(isMe);
 
   useEffect(() => {
-    if (isAuth) dispatch(fetchUserCart());
-  }, [isAuth]);
+    if (isMe && isAuth && userId) dispatch(fetchUserCart(userId));
+  }, [isMe, isAuth, userId]);
 
   useEffect(() => {
     if (isError) alert(error?.data?.message);

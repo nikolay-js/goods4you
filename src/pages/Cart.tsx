@@ -3,6 +3,7 @@ import { IProduct } from "../types";
 
 interface ICartProps {
   cart: {
+    id: number,
     products: Array<IProduct>,
     totalQuantity: number,
     discountedTotal: number,
@@ -11,7 +12,7 @@ interface ICartProps {
 };
 
 const Cart: React.FC<ICartProps> = ({ cart }) => {
-  const { products, totalQuantity, discountedTotal, total } = cart;
+  const { products, totalQuantity, discountedTotal, total, id: cartId } = cart;
   
   return (
     <main className="section">
@@ -24,11 +25,8 @@ const Cart: React.FC<ICartProps> = ({ cart }) => {
                 return (
                   <CartItem
                     key={id}
-                    title={cartItem.title}
-                    thumbnail={cartItem.thumbnail}
-                    price={cartItem.price}
-                    quantity={cartItem.quantity}
-                    id={cartItem.id}
+                    product={cartItem}
+                    cartId={cartId}
                   />
                 );
               })}

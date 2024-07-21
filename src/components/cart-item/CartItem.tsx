@@ -1,10 +1,22 @@
 import { NavLink } from 'react-router-dom';
 import Button from '../ui-kit/button/Button';
 import { IProduct } from '../../types';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../redux/store';
+import { deleteProduct } from '../../redux/reducers/cartsSlice';
 
 import './style.css';
 
-const CartItem: React.FC<IProduct> = ({ title, thumbnail, id, price, quantity }) => (
+interface ICartItem {
+  product: IProduct,
+  cartId: number,
+};
+
+const CartItem: React.FC<ICartItem> = ({ product, cartId }) => {  
+  const dispatch = useDispatch<AppDispatch>();
+  const { title, thumbnail, id, price, quantity } = product;
+  
+  return (
   <li className="cart-item">
     <figure className="cart-item__content">
       <img src={thumbnail} alt={title} />
@@ -26,7 +38,7 @@ const CartItem: React.FC<IProduct> = ({ title, thumbnail, id, price, quantity })
             <img src="src/assets/icons/+.svg" alt="+ button" />
           </Button>
         </div>
-        <a className="cart-item__delete-btn" area-lable="Delete button">Delete</a>
+        <a className="cart-item__delete-btn" area-lable="Delete button" onClick={() => dispatch(deleteProduct({ cartId, product }))}>Delete</a>
       </div>
     ) : (
         <button type="button" className="btn cart-item__btn cart-item__cart-btn">
@@ -34,6 +46,7 @@ const CartItem: React.FC<IProduct> = ({ title, thumbnail, id, price, quantity })
         </button>
       )}
   </li>
-);
+)
+};
 
 export default CartItem;
