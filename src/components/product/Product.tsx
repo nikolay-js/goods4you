@@ -8,9 +8,13 @@ import { AppDispatch } from '../../redux/store';
 
 import './style.css';
 
-const Product: React.FC<IProduct> = (product) => {
+interface IProductItem {
+  product: IProduct
+};
+
+const Product: React.FC<IProductItem> = ({ product }) => {
   const { carts, isLoading } = useAppSelector((state) => state.cartReducer);
-  const { title, thumbnail, id, price, quantity } = product;
+  const { title, thumbnail, id, price, quantity, stock } = product;
   const cartId = carts?.[0]?.id;
   const cartProducts = carts?.[0]?.products ?? [];
   const quantityInCart = cartProducts.find((item: IProduct) => item.id === id)?.quantity;
@@ -33,9 +37,10 @@ const Product: React.FC<IProduct> = (product) => {
         {quantityProductInCart ? (
           <div className="product__control">
             <Button
+              disabled={isLoading}
               type="button"
               className="product__btn"
-              /* onClick={() => dispatch(updateProduct({ cartId, product }))} */
+              onClick={() => dispatch(updateProduct({ cartId, product, dec: true }))}
             >
               <img src="src/assets/icons/-.svg" alt="- button" />
             </Button>
@@ -43,9 +48,10 @@ const Product: React.FC<IProduct> = (product) => {
               {quantityProductInCart} {`${quantityProductInCart > 1 ? 'items' : 'item'}`}
             </span>
             <Button
+              disabled={isLoading || quantityProductInCart === stock}
               type="button"
               className="product__btn"
-              /* onClick={() => dispatch(updateProduct({ cartId, product }))} */
+              onClick={() => dispatch(updateProduct({ cartId, product }))}
             >
               <img src="src/assets/icons/+.svg" alt="+ button" />
             </Button>

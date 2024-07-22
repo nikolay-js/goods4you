@@ -39,7 +39,7 @@ export const fetchUserCart = createAsyncThunk(
 
 export const addProduct = createAsyncThunk(
   "cart/addProduct",
-  async ({ cartId, product }: { cartId: number, product: IProduct }, {rejectWithValue}) => {
+  async ({ cartId, product }: { cartId: number, product: IProduct }, { rejectWithValue }) => {
     const { id } = product;
     try {
       const response = await fetch(`https://dummyjson.com/carts/${cartId}`, {
@@ -64,7 +64,7 @@ export const addProduct = createAsyncThunk(
 
 export const updateProduct = createAsyncThunk(
   "cart/updateProduct",
-  async ({ cartId, product }: { cartId: number, product: IProduct }, {rejectWithValue}) => {
+  async ({ cartId, product, dec }: { cartId: number, product: IProduct, dec?: boolean }, { rejectWithValue }) => {
     const { id, quantity } = product;
     try {
       const response = await fetch(`https://dummyjson.com/carts/${cartId}`, {
@@ -89,7 +89,7 @@ export const updateProduct = createAsyncThunk(
 
 export const deleteProduct = createAsyncThunk(
   "cart/deleteProduct",
-  async ({ cartId, product }: { cartId: number, product: IProduct }, {rejectWithValue}) => {
+  async ({ cartId, product }: { cartId: number, product: IProduct }, { rejectWithValue }) => {
     const { id } = product;
     try {
       const response = await fetch(`https://dummyjson.com/carts/${cartId}`, {
@@ -124,9 +124,7 @@ export const cartSlice = createSlice({
       .addCase(fetchUserCart.fulfilled, (state, action) => {
         state.isLoading = false;
         state.error = '';
-        console.log('carts befor fetchUserCart', current(state));
         state.carts = action.payload.carts;
-        console.log('carts after fetchUserCart', current(state));
       })
       .addCase(fetchUserCart.pending, (state, action) => {
         state.isLoading = true;
@@ -138,13 +136,11 @@ export const cartSlice = createSlice({
       .addCase(addProduct.fulfilled, (state, action: PayloadAction<ICart>) => {
         state.isLoading = false;
         state.error = '';
-        console.log('carts befor addProduct', current(state));
         state.carts[0].products = state.carts[0].products.concat(action.payload.products);
         state.carts[0].total += action.payload.total;
         state.carts[0].discountedTotal += action.payload.discountedTotal;
         state.carts[0].totalProducts += action.payload.totalProducts;
         state.carts[0].totalQuantity += action.payload.totalQuantity;
-        console.log('carts after addProduct', current(state));
       })
       .addCase(addProduct.pending, (state, action) => {
         state.isLoading = true;
@@ -157,13 +153,22 @@ export const cartSlice = createSlice({
         state.isLoading = false;
         state.error = '';
         const {
-          arg: { cartId, product: { id } },
+          arg: { dec, product: { id } },
         } = action.meta;
-        if (cartId && id) {
-          let cart = state.carts.find((item) => item.id !== cartId)
-          cart.products = cart.products.map((item) =>
-            item.id === id ? action.payload : item
-          );
+        if (!dec) {
+          state.carts[0].products.find(product => product.id === id).quantity += action.payload.products[0].quantity;
+          state.carts[0].total += action.payload.total;
+          state.carts[0].discountedTotal += action.payload.discountedTotal;
+          state.carts[0].totalQuantity += action.payload.totalQuantity;
+        } else {
+          state.carts[0].products.find(product => product.id === id).quantity -= action.payload.products[0].quantity;
+          state.carts[0].total -= action.payload.total;
+          state.carts[0].discountedTotal -= action.payload.discountedTotal;
+          state.carts[0].totalQuantity -= action.payload.totalQuantity;
+          if (state.carts[0].products.find(product => product.id === id).quantity === 0) {
+            state.carts[0].totalProducts -= 1;
+            state.carts[0].products.pop();
+          }
         }
       })
       .addCase(updateProduct.pending, (state, action) => {

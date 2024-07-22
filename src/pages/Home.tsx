@@ -46,11 +46,7 @@ const Home: React.FC<IHome> = ({ me }) => {
 								return (
 									<Product
 										key={id}
-										title={product.title}
-										thumbnail={product.thumbnail}
-										price={product.price}
-										quantity={product.quantity}
-										id={product.id}
+										product={product}
 									/>
 								);
 							})}
