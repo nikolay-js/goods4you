@@ -9,13 +9,14 @@ import useDebounce from "../hooks/useDebounce";
 
 interface IHome {
 	me: string,
+  isMe: boolean,
 };
 
-const Home: React.FC<IHome> = ({ me }) => {
+const Home: React.FC<IHome> = ({ me, isMe }) => {
 	const [limit, setLimit] = useState(12);
 	const [search, setSearch] = useState('');
 	const [searchTerm, setSearchTerm] = useState('');
-	const { data, error, isLoading, isFetching, isSuccess, isError } = useFetchProductsQuery({ search, limit, authorization: me });
+	const { data, error, isLoading, isFetching, isSuccess, isError } = useFetchProductsQuery({ search, limit, authorization: me }, { skip: !isMe, refetchOnMountOrArgChange: true });
 	const products: Array<IProduct> = data?.products ?? [];
 	const totalProducts = data?.total ?? '';
 	const limitProducts = data?.limit ?? '';

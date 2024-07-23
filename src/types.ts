@@ -7,10 +7,12 @@ export interface IProduct {
   quantity?: number,
   tags?: Array<string>,
   discountPercentage?: number,
+  discountedTotal?: number,
   description?: string,
   stock?: number,
   warrantyInformation?: string,
   shippingInformation?: string,
+  total?: number,
 };
 
 export interface IUser {

@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { IUser } from "../../types";
-import { setUserId } from '../reducers/cartsSlice';
+import { setUser } from '../reducers/cartsSlice';
 
 
 export const authApi = createApi({
@@ -32,8 +32,8 @@ export const authApi = createApi({
         result,
       async onQueryStarted(args, { dispatch, queryFulfilled }) {
         try {
-          const { data: { id } } = await queryFulfilled;
-          dispatch(setUserId(id));
+          const { data } = await queryFulfilled;
+          dispatch(setUser(data));
         } catch (error) {}
       },
       providesTags: ['Auth']

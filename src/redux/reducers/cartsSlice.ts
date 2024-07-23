@@ -13,14 +13,14 @@ interface ICart {
 
 interface ICartState {
   carts: Array<ICart>;
-  userId: number,
+  user: IUser,
   isLoading: boolean;
   error: string;
 };
 
 const initialState: ICartState = {
   carts: [],
-  userId: undefined,
+  user: undefined,
   isLoading: false,
   error: '',
 };
@@ -39,8 +39,7 @@ export const fetchUserCart = createAsyncThunk(
 
 export const addProduct = createAsyncThunk(
   "cart/addProduct",
-  async ({ cartId, product }: { cartId: number, product: IProduct }, { rejectWithValue }) => {
-    const { id } = product;
+  async ({ cartId, productId }: { cartId: number, productId: number }, { rejectWithValue }) => {
     try {
       const response = await fetch(`https://dummyjson.com/carts/${cartId}`, {
         method: 'PUT',
@@ -49,7 +48,7 @@ export const addProduct = createAsyncThunk(
           merge: false, // this will include existing products in the cart
           products: [
             {
-              id,
+              id: productId,
               quantity: 1,
             },
           ]
@@ -64,8 +63,7 @@ export const addProduct = createAsyncThunk(
 
 export const updateProduct = createAsyncThunk(
   "cart/updateProduct",
-  async ({ cartId, product, dec }: { cartId: number, product: IProduct, dec?: boolean }, { rejectWithValue }) => {
-    const { id, quantity } = product;
+  async ({ cartId, productId, dec }: { cartId: number, productId: number, dec?: boolean }, { rejectWithValue }) => {
     try {
       const response = await fetch(`https://dummyjson.com/carts/${cartId}`, {
         method: 'PATCH',
@@ -74,8 +72,8 @@ export const updateProduct = createAsyncThunk(
           merge: false, // this will include existing products in the cart
           products: [
             {
-              id,
-              quantity,
+              id: productId,
+              quantity: 1,
             },
           ]
         })
@@ -89,8 +87,7 @@ export const updateProduct = createAsyncThunk(
 
 export const deleteProduct = createAsyncThunk(
   "cart/deleteProduct",
-  async ({ cartId, product }: { cartId: number, product: IProduct }, { rejectWithValue }) => {
-    const { id } = product;
+  async ({ cartId, productId }: { cartId: number, productId: number }, { rejectWithValue }) => {
     try {
       const response = await fetch(`https://dummyjson.com/carts/${cartId}`, {
         method: 'DELETE',
@@ -99,7 +96,7 @@ export const deleteProduct = createAsyncThunk(
           merge: false, // this will include existing products in the cart
           products: [
             {
-              id,
+              id: productId,
             },
           ]
         })
@@ -115,8 +112,8 @@ export const cartSlice = createSlice({
   initialState,
   name: "cartSlice",
   reducers: {
-    setUserId: (state, action: PayloadAction<number>) => {
-      state.userId = action.payload;
+    setUser: (state, action: PayloadAction<IUser>) => {
+      state.user = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -133,10 +130,17 @@ export const cartSlice = createSlice({
         state.isLoading = false;
         state.error = String(action.payload)
       })
-      .addCase(addProduct.fulfilled, (state, action: PayloadAction<ICart>) => {
+      .addCase(addProduct.fulfilled, (state, action) => {
         state.isLoading = false;
         state.error = '';
+        const {
+          arg: { productId: id },
+        } = action.meta;
+        if (state.carts[0].products.find(product => product.id === id)?.quantity === 0) {
+          state.carts[0].products.find(product => product.id === id).quantity += 1;
+        } else {          
         state.carts[0].products = state.carts[0].products.concat(action.payload.products);
+        }
         state.carts[0].total += action.payload.total;
         state.carts[0].discountedTotal += action.payload.discountedTotal;
         state.carts[0].totalProducts += action.payload.totalProducts;
@@ -153,7 +157,7 @@ export const cartSlice = createSlice({
         state.isLoading = false;
         state.error = '';
         const {
-          arg: { dec, product: { id } },
+          arg: { dec, productId: id },
         } = action.meta;
         if (!dec) {
           state.carts[0].products.find(product => product.id === id).quantity += action.payload.products[0].quantity;
@@ -167,7 +171,6 @@ export const cartSlice = createSlice({
           state.carts[0].totalQuantity -= action.payload.totalQuantity;
           if (state.carts[0].products.find(product => product.id === id).quantity === 0) {
             state.carts[0].totalProducts -= 1;
-            state.carts[0].products.pop();
           }
         }
       })
@@ -182,10 +185,14 @@ export const cartSlice = createSlice({
         state.isLoading = false;
         state.error = '';
         const {
-          arg: { product: { id } },
+          arg: { productId: id },
         } = action.meta;
         if (id) {
-          state.carts[0].products = state.carts[0].products.filter((item) => item.id !== id);
+          state.carts[0].total -= state.carts[0].products.find(product => product.id === id).quantity * state.carts[0].products.find(product => product.id === id).price;
+          state.carts[0].discountedTotal -= state.carts[0].products.find(product => product.id === id).discountedTotal;
+          state.carts[0].totalQuantity -= state.carts[0].products.find(product => product.id === id).quantity;
+          state.carts[0].products.find((item) => item.id === id).quantity = 0;
+          state.carts[0].totalProducts -= 1;
         }
       })
       .addCase(deleteProduct.pending, (state, action) => {
@@ -198,6 +205,6 @@ export const cartSlice = createSlice({
   },
 });
 
-export const { setUserId } = cartSlice.actions;
+export const { setUser } = cartSlice.actions;
 
 export default cartSlice.reducer;

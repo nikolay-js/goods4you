@@ -3,11 +3,13 @@ import { NavLink, useLocation } from 'react-router-dom';
 import './style.css';
 
 interface INavbarProps {
+  firstName?: string,
+  lastName?: string,
   footer?: boolean;
-  totalQuantity?: number;
+  totalProducts?: number;
 };
 
-const Navbar: React.FC<INavbarProps> = ({ footer, totalQuantity }) => {
+const Navbar: React.FC<INavbarProps> = ({ footer, totalProducts, firstName = '', lastName = '' }) => {
   const activeLink = 'nav-list__link nav-list__link--active';
   const normalLink = 'nav-list__link';
   const location = useLocation();
@@ -51,13 +53,15 @@ const Navbar: React.FC<INavbarProps> = ({ footer, totalQuantity }) => {
                 Cart
                 <span>
                   <img src="src/assets/icons/cart.svg" alt="Cart" />
-                  {totalQuantity && <span className="nav-list__cart-quantity">{totalQuantity}</span>}
+                  {totalProducts && <span className="nav-list__cart-quantity">{totalProducts}</span>}
                 </span>
               </NavLink>
             </li>
-            <li className="nav-list__item nav-list__item-login">
-              Johnson Smith
+            {firstName && lastName &&
+              <li className="nav-list__item nav-list__item-login">
+                {`${firstName} ${lastName}`}
             </li>
+            }
           </ul>
         </div>
       </div>

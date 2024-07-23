@@ -219,6 +219,11 @@ details[open] summary {
 	background-color: rgba(0, 0, 0, 0.04);
 }
 
+.product-page .product-control {
+	width: 254px;
+}
+
+.product-page .product-control,
 .product-page__btn {
 	margin-left: auto;
 }
@@ -284,6 +289,7 @@ details[open] summary {
 	flex-direction: column;
 	row-gap: 10px;
 	padding: 20px 40px;
+	width: 696px;
 	border: 1px solid #c4c4c4;
 	border-radius: 4px;
 }

@@ -1,0 +1,25 @@
+.product-control {
+  display: flex;
+	column-gap: 20px;
+  width: 188px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.product-control .product-control__btn img {
+  height: 18px;
+  width: 18px;
+}
+
+.product-control__quantity {
+  width: 100%;
+  text-align: center;
+  font-weight: 400;
+  font-size: 14px;
+}
+
+button.product-control__btn {
+  padding: 16px;
+  height: 100%;
+  width: 100%;
+}

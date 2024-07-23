@@ -75,23 +75,6 @@
   font-size: 18px;
 }
 
-.product__control {
-  display: flex;
-  width: 188px;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.product__control .product__btn img {
-  height: 18px;
-  width: 18px;
-}
-
-.product__quantity {
-  font-weight: 400;
-  font-size: 14px;
-}
-
 button.product__btn {
   padding: 16px;
   height: 50px;

@@ -18,9 +18,10 @@ import './styles/index.css';
 
 function App() {
   const dispatch = useAppDispatch();
-  const { carts, userId, isLoading, isError, error } = useAppSelector((state) => state.cartReducer);
+  const { carts, user = {}, isLoading, isError, error } = useAppSelector((state) => state.cartReducer);
   const cart = carts?.[0] ?? [];
-  const { totalQuantity = '' } = cart;
+  const { totalProducts = '' } = cart;
+  const  { id: userId, firstName, lastName } = user;
   const me = JSON.parse(localStorage.getItem('goods4you') || '{}');
   const isMe = Object.keys(me).length > 0;
   const [isAuth, setIsAuth] = useState<boolean>(isMe);
@@ -38,7 +39,7 @@ function App() {
       {isLoading && <h1>is loading...</h1>}
       <Router>
         <ScrollToAnchor />
-        <Navbar totalQuantity={totalQuantity} />
+        <Navbar totalProducts={totalProducts} firstName={firstName} lastName={lastName} />
         <Routes>
           {(!isMe || !isAuth) && <Route
             path="/login"
@@ -55,20 +56,20 @@ function App() {
               element={
                 <>
                   <PageTitle title="Catalog | Goods4you" />
-                  <Home me={me} />
+                  <Home me={me} isMe={isMe} />
                 </>
               }
             />
             <Route
               path="/product/:id"
-              element={<Product me={me} />}
+              element={<Product me={me} isMe={isMe} />}
             />
             <Route
               path="/cart"
               element={
                 <>
                   <PageTitle title="My cart | Goods4you" />
-                  <Cart cart={cart} />
+                  <Cart />
                 </>
               }
             />

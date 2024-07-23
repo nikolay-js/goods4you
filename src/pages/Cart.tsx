@@ -1,53 +1,56 @@
+import { useEffect } from "react";
 import CartItem from "../components/cart-item/CartItem";
 import { IProduct } from "../types";
+import { useAppSelector } from "../hooks/redux";
 
-interface ICartProps {
-  cart: {
-    id: number,
-    products: Array<IProduct>,
-    totalQuantity: number,
-    discountedTotal: number,
-    total: number,
-  },
-};
+const Cart: React.FC = () => {
+  const { carts, isLoading, isError, error } = useAppSelector((state) => state.cartReducer);
+  const cart = carts?.[0] ?? [];
+  const { products = [], totalProducts, discountedTotal, total, id: cartId } = cart;
 
-const Cart: React.FC<ICartProps> = ({ cart }) => {
-  const { products, totalQuantity, discountedTotal, total, id: cartId } = cart;
-  
+  useEffect(() => {
+    if (isError) alert(error?.data?.message);
+  }, [isError]);
+
   return (
     <main className="section">
       <div className="container">
         <div className="cart-page">
           <h2 className="title-1">My cart</h2>
-          <div className="cart-page__content">
-            <ul className="cart-page__items">
-              {products.map((cartItem, id) => {
-                return (
-                  <CartItem
-                    key={id}
-                    product={cartItem}
-                    cartId={cartId}
-                  />
-                );
-              })}
-            </ul>
-            <div className="cart-page__total">
-              <div className="total__common">
-                <div className="total__common-item">
-                  <div className="common-item__count">Total count</div>
-                  <div className="common-item__count-value">{totalQuantity} items</div>
-                </div>
-                <div className="total__common-item">
-                  <div className="common-item__price">Price without discount</div>
-                  <div className="common-item__price-value">{total}$</div>
+          {cart.length === 0 ? (
+            <p>is loading...</p>
+          ) : (
+              <div className="cart-page__content">
+                <ul className="cart-page__items">
+                  {products.map((cartItem: IProduct, id: number) => {
+                    return (
+                      <CartItem
+                        key={id}
+                        product={cartItem}
+                        cartId={cartId}
+                        isLoading={isLoading}
+                      />
+                    );
+                  })}
+                </ul>
+                <div className="cart-page__total">
+                  <div className="total__common">
+                    <div className="total__common-item">
+                      <div className="common-item__count">Total count</div>
+                      <div className="common-item__count-value">{totalProducts} items</div>
+                    </div>
+                    <div className="total__common-item">
+                      <div className="common-item__price">Price without discount</div>
+                      <div className="common-item__price-value">{total.toFixed(2)}$</div>
+                    </div>
+                  </div>
+                  <div className="total__item">
+                    <div className="total__item-price">Total price</div>
+                    <div className="total__item-value">{discountedTotal.toFixed(2)}$</div>
+                  </div>
                 </div>
               </div>
-              <div className="total__item">
-                <div className="total__item-price">Total price</div>
-                <div className="total__item-value">{discountedTotal}$</div>
-              </div>
-            </div>
-          </div>
+            )}
         </div>
       </div>
     </main>

@@ -1,8 +1,9 @@
 import { NavLink } from 'react-router-dom';
 import Button from '../ui-kit/button/Button';
+import ProductControl from '../product-control/ProductControl';
 import { IProduct } from '../../types';
 import { useAppSelector } from '../../hooks/redux';
-import { addProduct, updateProduct } from '../../redux/reducers/cartsSlice';
+import { addProduct } from '../../redux/reducers/cartsSlice';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../redux/store';
 
@@ -14,11 +15,10 @@ interface IProductItem {
 
 const Product: React.FC<IProductItem> = ({ product }) => {
   const { carts, isLoading } = useAppSelector((state) => state.cartReducer);
-  const { title, thumbnail, id, price, quantity, stock } = product;
+  const { title, thumbnail, id, price } = product;
   const cartId = carts?.[0]?.id;
   const cartProducts = carts?.[0]?.products ?? [];
-  const quantityInCart = cartProducts.find((item: IProduct) => item.id === id)?.quantity;
-  const quantityProductInCart = quantity ?? quantityInCart;
+  const quantityProductInCart = cartProducts.find((item: IProduct) => item.id === id)?.quantity;
   const dispatch = useDispatch<AppDispatch>();
 
   return (
@@ -35,33 +35,18 @@ const Product: React.FC<IProductItem> = ({ product }) => {
           <p className="product__price">{price} $</p>
         </NavLink>
         {quantityProductInCart ? (
-          <div className="product__control">
-            <Button
-              disabled={isLoading}
-              type="button"
-              className="product__btn"
-              onClick={() => dispatch(updateProduct({ cartId, product, dec: true }))}
-            >
-              <img src="src/assets/icons/-.svg" alt="- button" />
-            </Button>
-            <span className="product__quantity">
-              {quantityProductInCart} {`${quantityProductInCart > 1 ? 'items' : 'item'}`}
-            </span>
-            <Button
-              disabled={isLoading || quantityProductInCart === stock}
-              type="button"
-              className="product__btn"
-              onClick={() => dispatch(updateProduct({ cartId, product }))}
-            >
-              <img src="src/assets/icons/+.svg" alt="+ button" />
-            </Button>
-          </div>
+          <ProductControl
+            product={product}
+            isLoading={isLoading}
+            cartId={cartId}
+            quantityProductInCart={quantityProductInCart}
+          />
         ) : (
             <Button
               disabled={isLoading}
               type="button"
               className="btn product__btn"
-              onClick={() => dispatch(addProduct({ cartId, product }))}
+              onClick={() => dispatch(addProduct({ cartId, productId: id }))}
             >
               <img src="src/assets/icons/cart.svg" alt="Add to cart button" />
             </Button>
