@@ -53,7 +53,7 @@ const Navbar: React.FC<INavbarProps> = ({ footer, totalProducts, firstName = '',
                 Cart
                 <span>
                   <img src="src/assets/icons/cart.svg" alt="Cart" />
-                  {totalProducts && <span className="nav-list__cart-quantity">{totalProducts}</span>}
+                  {(totalProducts !== 0) && <span className="nav-list__cart-quantity">{totalProducts}</span>}
                 </span>
               </NavLink>
             </li>
