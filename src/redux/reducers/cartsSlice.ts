@@ -136,8 +136,12 @@ export const cartSlice = createSlice({
         const {
           arg: { productId: id },
         } = action.meta;
-        if (state.carts[0].products.find(product => product.id === id)?.quantity === 0) {
-          state.carts[0].products.find(product => product.id === id).quantity += 1;
+        let product = state.carts[0].products.find(product => product.id === id);
+        if (product?.quantity === 0) {
+          product.quantity += action.payload.products[0].quantity;
+          product.total += action.payload.products[0].total;
+          product.discountPercentage += action.payload.products[0].discountPercentage;
+          product.discountedTotal += action.payload.products[0].discountedPrice;
         } else {          
         state.carts[0].products = state.carts[0].products.concat(action.payload.products);
         }
@@ -159,19 +163,24 @@ export const cartSlice = createSlice({
         const {
           arg: { dec, productId: id },
         } = action.meta;
+        let product = state.carts[0].products.find(product => product.id === id);
         if (!dec) {
-          state.carts[0].products.find(product => product.id === id).quantity += action.payload.products[0].quantity;
+          product.quantity += action.payload.products[0].quantity;
+          product.total += action.payload.products[0].total;
+          product.discountPercentage += action.payload.products[0].discountPercentage;
+          product.discountedTotal += action.payload.products[0].discountedPrice;
           state.carts[0].total += action.payload.total;
           state.carts[0].discountedTotal += action.payload.discountedTotal;
           state.carts[0].totalQuantity += action.payload.totalQuantity;
         } else {
-          state.carts[0].products.find(product => product.id === id).quantity -= action.payload.products[0].quantity;
+          product.quantity -= action.payload.products[0].quantity;
+          product.total -= action.payload.products[0].total;
+          product.discountPercentage -= action.payload.products[0].discountPercentage;
+          product.discountedTotal -= action.payload.products[0].discountedPrice;
           state.carts[0].total -= action.payload.total;
           state.carts[0].discountedTotal -= action.payload.discountedTotal;
           state.carts[0].totalQuantity -= action.payload.totalQuantity;
-          if (state.carts[0].products.find(product => product.id === id).quantity === 0) {
-            state.carts[0].totalProducts -= 1;
-          }
+          if (product.quantity === 0) state.carts[0].totalProducts -= 1;
         }
       })
       .addCase(updateProduct.pending, (state, action) => {
@@ -187,12 +196,16 @@ export const cartSlice = createSlice({
         const {
           arg: { productId: id },
         } = action.meta;
+        let product = state.carts[0].products.find(product => product.id === id);
         if (id) {
-          state.carts[0].total -= state.carts[0].products.find(product => product.id === id).quantity * state.carts[0].products.find(product => product.id === id).price;
-          state.carts[0].discountedTotal -= state.carts[0].products.find(product => product.id === id).discountedTotal;
-          state.carts[0].totalQuantity -= state.carts[0].products.find(product => product.id === id).quantity;
-          state.carts[0].products.find((item) => item.id === id).quantity = 0;
+          state.carts[0].total -= product.total;
+          state.carts[0].discountedTotal -= product.discountedTotal;
           state.carts[0].totalProducts -= 1;
+          state.carts[0].totalQuantity -= product.quantity;          
+          product.quantity = 0;
+          product.total = 0;
+          product.discountPercentage = 0;
+          product.discountedTotal = 0;
         }
       })
       .addCase(deleteProduct.pending, (state, action) => {
