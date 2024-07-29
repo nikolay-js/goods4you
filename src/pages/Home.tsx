@@ -30,7 +30,7 @@ const Home: React.FC<IHome> = ({ me, isMe }) => {
 	}
 
   useEffect(() => {
-    if (isError) alert(error?.data?.message);
+    if (isError) alert('error' in error ? error.error : error.data.message);
   }, [isError]);
 
 	return (

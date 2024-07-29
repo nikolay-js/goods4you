@@ -22,7 +22,7 @@ const PrivateRoute: React.FC<IPrivateRoute> = ({ me, isMe, isAuth, setIsAuth }) 
         localStorage.removeItem('goods4you');
         setIsAuth(false);
       } else {
-        alert(error?.data?.message);
+        alert('error' in error ? error.error : error.data.message); // JSON.stringify(error.data)
       }
     }
   }, [isError]);

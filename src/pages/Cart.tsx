@@ -1,16 +1,11 @@
-import { useEffect } from "react";
 import CartItem from "../components/cart-item/CartItem";
 import { IProduct } from "../types";
 import { useAppSelector } from "../hooks/redux";
 
 const Cart: React.FC = () => {
-  const { carts, isLoading, isError, error } = useAppSelector((state) => state.cartReducer);
+  const { carts, isLoading } = useAppSelector((state) => state.cartReducer);
   const cart = carts?.[0] ?? [];
   const { products = [], totalProducts, discountedTotal, total, id: cartId } = cart;
-
-  useEffect(() => {
-    if (isError) alert(error?.data?.message);
-  }, [isError]);
 
   return (
     <main className="section">

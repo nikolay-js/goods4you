@@ -20,7 +20,7 @@ const Product: React.FC<IProductPage> = ({ me, isMe }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const [mainImg, setMainImg] = useState<string>('');
-  const { carts = [], isLoading: isLoadingCart, isError: isErrorCart } = useAppSelector((state) => state.cartReducer);
+  const { carts = [], isLoading: isLoadingCart } = useAppSelector((state) => state.cartReducer);
   const { data = [], error, isLoading, isSuccess, isError, status } = useGetProductsByIdQuery({ id, authorization: me }, { skip: !isMe, refetchOnMountOrArgChange: true });
   const product: IProduct = data;
   const discountValue = ((product.price - product?.discountPercentage) * 100 / product.price).toFixed(2);
@@ -37,8 +37,8 @@ const Product: React.FC<IProductPage> = ({ me, isMe }) => {
   }, [product?.images?.[0]]);
 
   useEffect(() => {
-    if (isError || isErrorCart) alert(error?.data?.message);
-  }, [isError, isErrorCart]);
+    if (isError) alert('error' in error ? error.error : error.data.message);
+  }, [isError]);
 
   return (
     <>

@@ -12,7 +12,7 @@ const Login: React.FC<ILogin> = ({ setIsAuth }) => {
   const navigate = useNavigate();
   const location = useLocation();
   
-  const [authLogin, { isSuccess, isLoading, data, error }] = useAuthLoginMutation();
+  const [authLogin, { isSuccess, isLoading, data, isError, error }] = useAuthLoginMutation();
 
   const from = location.state?.from?.pathname || '/';
   
@@ -23,6 +23,10 @@ const Login: React.FC<ILogin> = ({ setIsAuth }) => {
       navigate(from, { replace: true });
     };
   }, [isSuccess]);
+
+  useEffect(() => {
+    if (isError && error?.data?.message !== 'Invalid credentials') alert('error' in error ? error.error : error.data.message);
+  }, [isError]);
 
   const handleSubmit = () => {
     event.preventDefault();
@@ -38,7 +42,7 @@ const Login: React.FC<ILogin> = ({ setIsAuth }) => {
           <form className="login__form" onSubmit={handleSubmit}>
             <Input disabled={isLoading} type="text" placeholder="Login" name="username" required />
             <Input disabled={isLoading} type="password" placeholder="Password" name="password" required />
-            {error?.data?.message && <div className="login__form-error">{error?.data?.message}</div>}
+            {error?.data?.message === 'Invalid credentials' && <div className="login__form-error">{error.data.message}</div>}
             <Button disabled={isLoading} type="submit" className="login__form-btn">Sign in</Button>
           </form>
         </div>

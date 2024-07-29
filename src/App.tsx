@@ -18,7 +18,7 @@ import './styles/index.css';
 
 function App() {
   const dispatch = useAppDispatch();
-  const { carts, user = {}, isLoading, isError, error } = useAppSelector((state) => state.cartReducer);
+  const { carts, user = {}, isLoading, error } = useAppSelector((state) => state.cartReducer);
   const cart = carts?.[0] ?? [];
   const { totalProducts = '' } = cart;
   const  { id: userId, firstName, lastName } = user;
@@ -31,8 +31,8 @@ function App() {
   }, [isMe, isAuth, userId]);
 
   useEffect(() => {
-    if (isError) alert(error?.data?.message);
-  }, [isError]);
+    if (error) alert(error);
+  }, [error]);
 
   return (
     <div className="App">
