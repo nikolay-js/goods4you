@@ -15,7 +15,7 @@ const Navbar: React.FC<INavbarProps> = ({ footer, totalProducts, firstName = '',
   const location = useLocation();
 
   return (
-    <nav className={`nav${footer ? ' footer' : ''}`}>
+    <nav className={`nav${footer ? ' footer' : ''}${location.pathname.substr(1) === 'login' ? ' login-page' : ''}`}>
       <div className="container">
         <div className="nav-row">
           <NavLink to="/" className="logo">
@@ -53,7 +53,7 @@ const Navbar: React.FC<INavbarProps> = ({ footer, totalProducts, firstName = '',
                 Cart
                 <span>
                   <img src="src/assets/icons/cart.svg" alt="Cart" />
-                  {(totalProducts !== 0) && <span className="nav-list__cart-quantity">{totalProducts}</span>}
+                  {(totalProducts && totalProducts !== 0) ? <span className="nav-list__cart-quantity">{totalProducts}</span> : null}
                 </span>
               </NavLink>
             </li>

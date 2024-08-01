@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, PayloadAction, current } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { IProduct, IUser } from "../../types";
 
 interface ICart {
@@ -25,11 +25,18 @@ const initialState: ICartState = {
   error: '',
 };
 
+const token = JSON.parse(localStorage.getItem('goods4you') || '{}');
+
 export const fetchUserCart = createAsyncThunk(
   'cart/fetchCart',
   async (userId: number, thunkAPI) => {
     try {
-      const response = await fetch(`https://dummyjson.com/carts/user/${userId}`)
+      const response = await fetch(`https://dummyjson.com/carts/user/${userId}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+      })
       return await response.json();
     } catch (e) {
       return thunkAPI.rejectWithValue(e.message);
@@ -43,7 +50,10 @@ export const addProduct = createAsyncThunk(
     try {
       const response = await fetch(`https://dummyjson.com/carts/${cartId}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({
           merge: false, // this will include existing products in the cart
           products: [
@@ -67,7 +77,10 @@ export const updateProduct = createAsyncThunk(
     try {
       const response = await fetch(`https://dummyjson.com/carts/${cartId}`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({
           merge: false, // this will include existing products in the cart
           products: [
@@ -91,7 +104,10 @@ export const deleteProduct = createAsyncThunk(
     try {
       const response = await fetch(`https://dummyjson.com/carts/${cartId}`, {
         method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({
           merge: false, // this will include existing products in the cart
           products: [
@@ -142,8 +158,8 @@ export const cartSlice = createSlice({
           product.total += action.payload.products[0].total;
           product.discountPercentage += action.payload.products[0].discountPercentage;
           product.discountedTotal += action.payload.products[0].discountedPrice;
-        } else {          
-        state.carts[0].products = state.carts[0].products.concat(action.payload.products);
+        } else {
+          state.carts[0].products = state.carts[0].products.concat({ discountedTotal: action.payload.products[0].discountedPrice, ...action.payload.products[0] });
         }
         state.carts[0].total += action.payload.total;
         state.carts[0].discountedTotal += action.payload.discountedTotal;
@@ -201,7 +217,7 @@ export const cartSlice = createSlice({
           state.carts[0].total -= product.total;
           state.carts[0].discountedTotal -= product.discountedTotal;
           state.carts[0].totalProducts -= 1;
-          state.carts[0].totalQuantity -= product.quantity;          
+          state.carts[0].totalQuantity -= product.quantity;
           product.quantity = 0;
           product.total = 0;
           product.discountPercentage = 0;

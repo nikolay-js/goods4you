@@ -7,8 +7,8 @@ export const productsApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: 'https://dummyjson.com' }),
   tagTypes: ['Products'],
   endpoints: (builder) => ({
-    fetchProducts: builder.query<IProduct[], { search: string, limit: number, authorization: string }>({
-      query: ({ search = '', limit = 12, authorization }) => ({
+    fetchProducts: builder.query<IProduct[], { search: string, limit?: number, skip: number, authorization: string }>({
+      query: ({ search = '', limit = 12, skip, authorization }) => ({
         url: `/products/search`,
         headers: {
           'Authorization': `Bearer ${authorization}`,
@@ -17,6 +17,7 @@ export const productsApi = createApi({
         params: {
           q: search,
           limit,
+          skip,
         }
       }),
       providesTags: ['Products']

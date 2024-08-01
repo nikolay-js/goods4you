@@ -43,6 +43,7 @@ const Product: React.FC<IProductItem> = ({ product }) => {
           />
         ) : (
             <Button
+              aria-label="Add to cart"
               disabled={isLoading}
               type="button"
               className="btn product__btn"

@@ -23,7 +23,7 @@ const Product: React.FC<IProductPage> = ({ me, isMe }) => {
   const { carts = [], isLoading: isLoadingCart } = useAppSelector((state) => state.cartReducer);
   const { data = [], error, isLoading, isSuccess, isError, status } = useGetProductsByIdQuery({ id, authorization: me }, { skip: !isMe, refetchOnMountOrArgChange: true });
   const product: IProduct = data;
-  const discountValue = ((product.price - product?.discountPercentage) * 100 / product.price).toFixed(2);
+  const discountValue = (product.price - (product.price * product?.discountPercentage / 100)).toFixed(2);
   const cartId = carts?.[0]?.id;
   const cartProducts = carts?.[0]?.products ?? [];
   const quantityProductInCart = cartProducts.find((item: IProduct) => item.id === Number(id))?.quantity;
@@ -66,7 +66,14 @@ const Product: React.FC<IProductPage> = ({ me, isMe }) => {
               <div className="product-page__title">
                 <h2 className="title-1">{product.title}</h2>
                 <div className="product-page__rating">
-                  <img src="/src/assets/icons/rating.svg" alt="Stars rating" />
+                  <div className="product-page__stars">
+                    {[...Array(5)].map((_, index) => {
+                      index += 1;
+                      return (
+                        <img key={index} className="product-page__star" src={`/src/assets/img/star${index <= Math.round(product.rating) ? '-on' : ''}.png`} alt="Star" />
+                      );
+                    })}
+                  </div>
                   <span className="product-page__rating-text">{product?.tags.join(' ')}</span>
                 </div>
               </div>
@@ -78,12 +85,12 @@ const Product: React.FC<IProductPage> = ({ me, isMe }) => {
               </div>
               <div className="product-page__buy">
                 <div className="product-page__prices">
-                  <p className="product-page__current-price">{product?.discountPercentage}$</p>
+                  <p className="product-page__current-price">{discountValue}$</p>
                   <p className="product-page__price">{product.price}$</p>
                 </div>
                 <div className="product-page__discount">
                   <p className="product-page__discount-text">Your discount:</p>
-                  <p className="product-page__discount-value">{discountValue}%</p>
+                  <p className="product-page__discount-value">{product?.discountPercentage}%</p>
                 </div>
                 {quantityProductInCart ? (
                   <ProductControl

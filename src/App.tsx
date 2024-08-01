@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
 import { useAppDispatch, useAppSelector } from "./hooks/redux";
 import { fetchUserCart } from "./redux/reducers/cartsSlice";
@@ -21,7 +21,7 @@ function App() {
   const { carts, user = {}, isLoading, error } = useAppSelector((state) => state.cartReducer);
   const cart = carts?.[0] ?? [];
   const { totalProducts = '' } = cart;
-  const  { id: userId, firstName, lastName } = user;
+  const { id: userId, firstName, lastName } = user;
   const me = JSON.parse(localStorage.getItem('goods4you') || '{}');
   const isMe = Object.keys(me).length > 0;
   const [isAuth, setIsAuth] = useState<boolean>(isMe);
@@ -83,6 +83,7 @@ function App() {
               </>
             }
           />
+          <Route path="/login" element={<Navigate to="/" />} />
         </Routes>
         <footer>
           <Navbar key="footer" footer />

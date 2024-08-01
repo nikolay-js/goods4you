@@ -20,6 +20,7 @@ const ProductControl: React.FC<IProductControl> = ({ product, isLoading, cartId,
   return (
     <div className="product-control">
       <Button
+        aria-label="Decrease in cart"
         disabled={isLoading}
         type="button"
         className="product-control__btn"
@@ -31,6 +32,7 @@ const ProductControl: React.FC<IProductControl> = ({ product, isLoading, cartId,
         {quantityProductInCart} {`${quantityProductInCart > 1 ? 'items' : 'item'}`}
       </span>
       <Button
+        aria-label="Increase in cart"
         disabled={isLoading || quantityProductInCart === stock}
         type="button"
         className="product-control__btn"

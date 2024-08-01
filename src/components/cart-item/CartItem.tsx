@@ -16,7 +16,8 @@ interface ICartItem {
 
 const CartItem: React.FC<ICartItem> = ({ product, cartId, isLoading }) => {
   const dispatch = useDispatch<AppDispatch>();
-  const { title, thumbnail, id, price, quantity } = product;
+  const { title, thumbnail, id, price, quantity, discountPercentage } = product;
+  const discountValue = (price - (price * discountPercentage / 100)).toFixed(2);
 
   return (
     <li className="cart-item">
@@ -25,7 +26,7 @@ const CartItem: React.FC<ICartItem> = ({ product, cartId, isLoading }) => {
         <figcaption className="cart-item__img-caption">
           <NavLink to={`/product/${id}`} className="cart-item__title">
             <h4 className="cart-item__text">{title}</h4>
-            <p className="cart-item__price">{price} $</p>
+            <p className="cart-item__price">{discountValue} $</p>
           </NavLink>
         </figcaption>
       </figure>
@@ -41,6 +42,7 @@ const CartItem: React.FC<ICartItem> = ({ product, cartId, isLoading }) => {
         </div>
       ) : (
           <Button
+            aria-label="Add to cart"
             type="button"
             className="btn cart-item__btn cart-item__cart-btn"
             disabled={isLoading}
