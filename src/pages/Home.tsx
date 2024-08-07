@@ -15,17 +15,16 @@ interface IHome {
 const Home: React.FC<IHome> = ({ me, isMe }) => {
 	const [limit, setLimit] = useState<number>(0);
 	const [search, setSearch] = useState<string>('');
-	const [searchTerm, setSearchTerm] = useState<string>('');
-	const [products, setProducts] = useState<Array<IProduct>>([]);
-	const { data, error, isLoading, isFetching, isSuccess, isError } = useFetchProductsQuery({ search, skip: limit, authorization: me }, { skip: !isMe, refetchOnMountOrArgChange: true });
-	const totalProducts = data?.total ?? '';
+	const [searchTerm, setSearchTerm] = useState<string | undefined>(undefined);
+	const { data: { products = [], total: totalProducts = 0 } = {}, error, isLoading, isFetching, isSuccess, isError } = useFetchProductsQuery({ search, skip: limit, authorization: me }, { skip: !isMe, refetchOnMountOrArgChange: true });
+	const [productsOnPage, setProducts] = useState<Array<IProduct>>(products);
 
 	useEffect(() => {
 		if (!isLoading && !isFetching && isSuccess) {
-			if (searchTerm || data) setProducts(data.products);
-			if (limit) setProducts([...products, ...data.products]);
+			if (searchTerm || products.length !== 0) setProducts(products);
+			if (limit !== 0) setProducts([...productsOnPage, ...products]);
 		}
-	}, [isLoading, isFetching, isSuccess, data, searchTerm, limit]);
+	}, [isLoading, isFetching, isSuccess, products.length, searchTerm, limit]);
 
 	useDebounce(() => {
 		setSearch(searchTerm);
@@ -47,21 +46,23 @@ const Home: React.FC<IHome> = ({ me, isMe }) => {
 			<main>
 				<section id="catalog" className="container">
 					<div className="section">
-						<h2 className="title-1">Catalog</h2>
-						<Input type="search" placeholder="Search by title" value={searchTerm || ''} onChange={handleInputSearch} />
-						<ul className="products">
-							{isLoading && <p>is loading...</p>}
-							{isSuccess && products.map((product, id) => {
-								return (
-									<Product
-										key={id}
-										product={product}
-									/>
-								);
-							})}
-						</ul>
-						{(!isLoading && isFetching) && <p>is loading...</p>}
-						{(totalProducts !== products.length) && <Button disabled={isLoading || isFetching} onClick={() => setLimit(limit + 12)}>Show more</Button>}
+						<div className="catalog">
+							<h2 className="title-1">Catalog</h2>
+							<Input type="search" placeholder="Search by title" value={searchTerm || ''} onChange={handleInputSearch} />
+							<ul className="products">
+								{isLoading && <p>is loading...</p>}
+								{isSuccess && productsOnPage?.map((product, id) => {
+									return (
+										<Product
+											key={id}
+											product={product}
+										/>
+									);
+								})}
+							</ul>
+							{(!isLoading && isFetching) && <p>is loading...</p>}
+							{(totalProducts !== productsOnPage?.length) && <Button disabled={isLoading || isFetching} className="catalog-btn" onClick={() => setLimit(limit + 12)}>Show more</Button>}
+						</div>
 					</div>
 				</section>
 				<section id="faq" className="faq">

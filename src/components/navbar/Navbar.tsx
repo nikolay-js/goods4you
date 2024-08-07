@@ -21,7 +21,11 @@ const Navbar: React.FC<INavbarProps> = ({ footer, totalProducts, firstName = '',
           <NavLink to="/" className="logo">
             Goods4you
 					</NavLink>
-
+          {firstName && lastName &&
+            <div className={`signedin${location.pathname.substr(1) === 'login' ? ' login-page' : ''}`}>
+              {`${firstName} ${lastName}`}
+            </div>
+          }
           <ul className={`nav-list${location.pathname.substr(1) === 'login' ? ' login-page' : ''}`}>
             <li className="nav-list__item">
               <NavLink
@@ -60,7 +64,7 @@ const Navbar: React.FC<INavbarProps> = ({ footer, totalProducts, firstName = '',
             {firstName && lastName &&
               <li className="nav-list__item nav-list__item-login">
                 {`${firstName} ${lastName}`}
-            </li>
+              </li>
             }
           </ul>
         </div>
