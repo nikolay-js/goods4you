@@ -1,6 +1,7 @@
 import CartItem from "../components/cart-item/CartItem";
 import { IProduct } from "../types";
 import { useAppSelector } from "../hooks/redux";
+import Loader from "../components/loader/loader";
 
 const Cart: React.FC = () => {
   const { carts, isLoading } = useAppSelector((state) => state.cartReducer);
@@ -14,7 +15,7 @@ const Cart: React.FC = () => {
           <h2 className="title-1">My cart</h2>
           <div className="cart-page__content">
             {!cart ? (
-              <p>is loading...</p>
+              <Loader />
             ) : (
                 cart.length === 0 ? (
                   <p>No items</p>

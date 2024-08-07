@@ -6,6 +6,7 @@ import Button from "../components/ui-kit/button/Button";
 import { IProduct } from "../types";
 import { useFetchProductsQuery } from "../redux/services/productsApi";
 import useDebounce from "../hooks/useDebounce";
+import Loader from "../components/loader/loader";
 
 interface IHome {
 	me: string,
@@ -50,7 +51,7 @@ const Home: React.FC<IHome> = ({ me, isMe }) => {
 							<h2 className="title-1">Catalog</h2>
 							<Input type="search" placeholder="Search by title" value={searchTerm || ''} onChange={handleInputSearch} />
 							<ul className="products">
-								{isLoading && <p>is loading...</p>}
+								{isLoading && <Loader />}
 								{isSuccess && productsOnPage?.map((product, id) => {
 									return (
 										<Product
@@ -60,7 +61,7 @@ const Home: React.FC<IHome> = ({ me, isMe }) => {
 									);
 								})}
 							</ul>
-							{(!isLoading && isFetching) && <p>is loading...</p>}
+							{(!isLoading && isFetching) && <Loader />}
 							{(totalProducts !== productsOnPage?.length) && <Button disabled={isLoading || isFetching} className="catalog-btn" onClick={() => setLimit(limit + 12)}>Show more</Button>}
 						</div>
 					</div>

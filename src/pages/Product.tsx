@@ -45,7 +45,6 @@ const Product: React.FC<IProductPage> = ({ me, isMe }) => {
       {isSuccess && <PageTitle title={`${product.title} | Goods4you`} />}
       <main className="section">
         <div className="container">
-          {isLoading && <h2>is loading...</h2>}
           {isSuccess && <div className="product-page">
             <div className="product-page__galery">
               <img src={mainImg} alt="Main image of galery" />

@@ -36,7 +36,6 @@ function App() {
 
   return (
     <div className="App">
-      {isLoading && <h1>is loading...</h1>}
       <Router>
         <ScrollToAnchor />
         <Navbar totalProducts={totalProducts} firstName={firstName} lastName={lastName} />

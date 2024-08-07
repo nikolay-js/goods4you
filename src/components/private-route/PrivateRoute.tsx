@@ -1,6 +1,7 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAuthMeQuery } from "../../redux/services/authApi";
 import { useEffect } from "react";
+import Loader from "../loader/loader";
 
 interface IPrivateRoute {
   me: string,
@@ -11,7 +12,7 @@ interface IPrivateRoute {
 
 const PrivateRoute: React.FC<IPrivateRoute> = ({ me, isMe, isAuth, setIsAuth }) => {
   const { isLoading, isFetching, isError, error } = useAuthMeQuery({ authorization: me }, { skip: !isMe, refetchOnMountOrArgChange: true });
-  
+
   const location = useLocation();
 
   const loading = isLoading || isFetching;
@@ -28,10 +29,10 @@ const PrivateRoute: React.FC<IPrivateRoute> = ({ me, isMe, isAuth, setIsAuth }) 
   }, [isError]);
 
   if (loading) {
-     return (
+    return (
       <main className="section">
         <div className="container">
-          <h2 className="title-1">is loading...</h2>
+          <Loader />
         </div>
       </main>
     );
