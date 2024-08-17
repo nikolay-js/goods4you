@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { HashRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
 import { useAppDispatch, useAppSelector } from "./hooks/redux";
 import { fetchUserCart } from "./redux/reducers/cartsSlice";
@@ -13,15 +13,16 @@ import PageTitle from "./components/page-title/PageTitle";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import PrivateRoute from "./components/private-route/PrivateRoute";
+import { IUser } from "./types";
 
 import './styles/index.css';
 
 function App() {
   const dispatch = useAppDispatch();
-  const { carts, user = {}, isLoading, error } = useAppSelector((state) => state.cartReducer);
+  const { carts, user = {}, error } = useAppSelector((state) => state.cartReducer);
   const cart = carts?.[0] ?? [];
-  const { totalProducts = '' } = cart;
-  const { id: userId, firstName, lastName } = user;
+  const { totalProducts } = cart;
+  const { id: userId, firstName, lastName } = user as IUser;
   const me = JSON.parse(localStorage.getItem('goods4you') || '{}');
   const isMe = Object.keys(me).length > 0;
   const [isAuth, setIsAuth] = useState<boolean>(isMe);

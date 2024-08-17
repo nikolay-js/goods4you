@@ -19,11 +19,13 @@ const PrivateRoute: React.FC<IPrivateRoute> = ({ me, isMe, isAuth, setIsAuth }) 
 
   useEffect(() => {
     if (isError) {
-      if (error?.status === 401) {
+      if ('status' in error && error.status === 401) {
         localStorage.removeItem('goods4you');
         setIsAuth(false);
       } else {
-        alert('error' in error ? error.error : error.data.message); // JSON.stringify(error.data)
+        if ('error' in error) alert(error.error);
+        if ('data' in error && typeof error.data === 'object' && error.data && 'message' in error.data) alert(error.data.message);
+        if ('message' in error) alert(error.message);
       }
     }
   }, [isError]);

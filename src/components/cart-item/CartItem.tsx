@@ -16,7 +16,7 @@ interface ICartItem {
 
 const CartItem: React.FC<ICartItem> = ({ product, cartId, isLoading }) => {
   const dispatch = useDispatch<AppDispatch>();
-  const { title, thumbnail, id, price, quantity, discountPercentage } = product;
+  const { title, thumbnail, id, price, quantity, discountPercentage = 0 } = product;
   const discountValue = (price - (price * discountPercentage / 100)).toFixed(2);
 
   return (

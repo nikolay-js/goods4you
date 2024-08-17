@@ -30,7 +30,7 @@ export const authApi = createApi({
       }),
       transformResponse: (result: IUser) =>
         result,
-      async onQueryStarted(args, { dispatch, queryFulfilled }) {
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
           dispatch(setUser(data));
