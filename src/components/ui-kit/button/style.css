@@ -17,3 +17,7 @@
 	position: relative;
 	top: 1px;
 }
+
+.btn:disabled {
+	background-color: #f8afaf;
+}

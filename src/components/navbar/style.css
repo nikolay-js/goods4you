@@ -1,5 +1,4 @@
 .nav {
-	flex: 0 0 auto;
 	padding: 23px 0;
 	background-color: var(--nav-bg);
 	color: var(--nav-text);
@@ -7,12 +6,16 @@
 }
 
 .footer {
-	flex: 0 0 auto;
 	background-color: var(--footer-bg);
 }
 
+.footer.login-page {
+	display: none;
+}
+
 .footer .nav-list__item-cart,
-.footer .nav-list__item-login {
+.footer .nav-list__item-login,
+.footer .signedin {
 	display: none;
 }
 
@@ -57,9 +60,22 @@
 	flex-wrap: wrap;
 	align-items: center;
   column-gap: 40px;
+}
+
+.signedin,
+.nav-list {
   font-weight: 600;
   font-size: 14px;
   line-height: 143%;
+}
+
+.signedin.login-page,
+.nav-list.login-page {
+	display: none;
+}
+
+.signedin {
+	display: none;
 }
 
 .nav-list__item-cart {

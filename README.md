@@ -1,30 +1,21 @@
-# React + TypeScript + Vite
+# Проект корзина магазина
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+### Обзор
+Проект представляет собой корзину магазина с возможностью поиска, добавления, изменения и удаления товаров.
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+### Технологии
+- Шаблон приложения развернут с помощью Vite react-ts
+- Работа со стилями организована через обычные css-файлы с использованием БЭМ-методологии
+- Frontend приложения написан с использованием библиотеки React и функциональных компонент
+- В приложении используется собственный UI-kit, в Storybook вынесены несколько атомов и молекул
+- Для хранения данных используется state-менеджер Redux (Redux-Toolkit)
+- Отдельный Redux Slice используется для хранения и обновления данных о товарах в корзине после их изменения
+- Для получения и изменения данных о корзине используется createAsyncThunk
+- Остальные данные в проекте получаются с помощью RTK Query
+- В проекте реализована поддержка адаптивности макета для всех расширений экрана от указанного в макетах до 320px (самый маленький экран мобильного телефона)
+- SEO: в проект добавлены favicon и мета-теги title и description, указаные в макете
+- a11y: в проекте задано правильное дерево заголовков, использована семантическая вёрстка, атрибуты alt у картинок, aria-* атрибуты, где необходимо
+- JWT: в приложении реализован механизм аутентификации пользователя, используя API-запросы из https://dummyjson.com/docs/auth и данные о пользователе. Если пользователь не авторизован, происходит автоматический редирект на страницу логина
+- В local storage хранится только авторизационный токен, предусмотрен редирект на страницу логина, если срок жизни токена истёк или он удален из local storage
+- Роутинг в приложении осуществляется с помощью react-router-dom
+- Связка TypeScript с React и Redux.

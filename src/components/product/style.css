@@ -1,5 +1,9 @@
 .product {
-	max-width: 370px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 370px;
+  width: 100%;
 	background-color: var(--product-card-bg);
 }
 
@@ -50,7 +54,7 @@
   display: flex;
   justify-content: space-between;
   column-gap: 10px;
-  height: 50px;
+  width: 100%;
   color: var(--product-card-text);
 }
 
@@ -73,23 +77,6 @@
 .product__price {
   font-weight: 400;
   font-size: 18px;
-}
-
-.product__control {
-  display: flex;
-  width: 188px;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.product__control .product__btn img {
-  height: 18px;
-  width: 18px;
-}
-
-.product__quantity {
-  font-weight: 400;
-  font-size: 14px;
 }
 
 button.product__btn {

@@ -1,28 +1,45 @@
+import { useState, ChangeEvent, useEffect } from "react";
 import Header from "../components/header/Header";
 import Product from "../components/product/Product";
 import Input from "../components/ui-kit/input/Input";
 import Button from "../components/ui-kit/button/Button";
 import { IProduct } from "../types";
-import { useState } from "react";
-import { productsApi } from "../redux/services/productsApi";
+import { useFetchProductsQuery } from "../redux/services/productsApi";
 import useDebounce from "../hooks/useDebounce";
+import Loader from "../components/loader/loader";
 
-const Home: React.FC = () => {
-	const [limit, setLimit] = useState(12);
-	const [search, setSearch] = useState('');
-	const [searchTerm, setSearchTerm] = useState('');
-	const { data, error, isLoading, isSuccess } = productsApi.useFetchProductsQuery({ search, limit });
-	const products: Array<IProduct> = data?.products ?? [];
-	const totalProducts = data?.total ?? '';
-	const limitProducts = data?.limit ?? '';
+interface IHome {
+	me: string,
+	isMe: boolean,
+};
+
+const Home: React.FC<IHome> = ({ me, isMe }) => {
+	const [limit, setLimit] = useState<number>(0);
+	const [search, setSearch] = useState<string>('');
+	const [searchTerm, setSearchTerm] = useState<string | undefined>(undefined);
+	const { data: { products = [], total: totalProducts = 0 } = {}, error, isLoading, isFetching, isSuccess, isError } = useFetchProductsQuery({ search, skip: limit, authorization: me }, { skip: !isMe, refetchOnMountOrArgChange: true });
+	const [productsOnPage, setProducts] = useState<Array<IProduct>>(products);
+
+	useEffect(() => {
+		if (!isLoading && !isFetching && isSuccess) {
+			if (searchTerm || products.length !== 0) setProducts(products);
+			if (limit !== 0) setProducts([...productsOnPage, ...products]);
+		}
+	}, [isLoading, isFetching, isSuccess, products.length, searchTerm, limit]);
 
 	useDebounce(() => {
 		setSearch(searchTerm);
+		setProducts([]);
+		setLimit(0);
 	}, [searchTerm], 800);
 
-	const handleInputSearch = (e) => {
+	const handleInputSearch = (e: ChangeEvent<HTMLInputElement>) => {
 		setSearchTerm(e.target.value);
 	}
+
+	useEffect(() => {
+		if (isError) alert('error' in error ? error.error : error.data.message);
+	}, [isError]);
 
 	return (
 		<>
@@ -30,25 +47,23 @@ const Home: React.FC = () => {
 			<main>
 				<section id="catalog" className="container">
 					<div className="section">
-						<h2 className="title-1">Catalog</h2>
-						<Input type="search" placeholder="Search by title" value={searchTerm || ''} onChange={handleInputSearch} />
-						<ul className="products">
-						{isLoading && <p>Is loading...</p>}
-						{error && <p>{error}</p>}
-							{isSuccess && products.map((product, id) => {
-								return (
-									<Product
-										key={id}
-										title={product.title}
-										thumbnail={product.thumbnail}
-										price={product.price}
-										quantity={product.quantity}
-										id={id}
-									/>
-								);
-							})}
-						</ul>
-						{(totalProducts !== limitProducts) && <Button onClick={() => setLimit(limit + 12)}>Show more</Button>}
+						<div className="catalog">
+							<h2 className="title-1">Catalog</h2>
+							<Input type="search" placeholder="Search by title" value={searchTerm || ''} onChange={handleInputSearch} />
+							<ul className="products">
+								{isLoading && <Loader />}
+								{isSuccess && productsOnPage?.map((product, id) => {
+									return (
+										<Product
+											key={id}
+											product={product}
+										/>
+									);
+								})}
+							</ul>
+							{(!isLoading && isFetching) && <Loader />}
+							{(totalProducts !== productsOnPage?.length) && <Button disabled={isLoading || isFetching} className="catalog-btn" onClick={() => setLimit(limit + 12)}>Show more</Button>}
+						</div>
 					</div>
 				</section>
 				<section id="faq" className="faq">
