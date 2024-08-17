@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { MouseEventHandler } from 'react';
 import './style.css';
 
 interface IButtonProps {
@@ -6,12 +6,13 @@ interface IButtonProps {
   href?: string;
   type?: "button" | "reset" | "submit";
   className?: string;
+  onClick?: MouseEventHandler<HTMLButtonElement | HTMLAnchorElement>;
 };
 
-const Button: React.FC<IButtonProps> = ({children, href, type, className, ...props}) => {
+const Button: React.FC<IButtonProps> = ({children, href, type, className, onClick, ...props}) => {
   const As = href ? 'a' : 'button';
     return (
-        <As {...props} {...href ? { href } : {}} {...type ? { type } : {}} className={`btn ${className}`}>
+        <As {...props} {...href ? { href } : {}} {...type ? { type } : {}} {...onClick ? { onClick } : {}} className={`btn ${className}`}>
             {children}
         </As>
     );

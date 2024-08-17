@@ -1,12 +1,14 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 
 import './style.css';
+import { useAppSelector } from '../../hooks/redux';
 
 interface INavbarProps {
   footer?: boolean;
+  totalQuantity?: number;
 };
 
-const Navbar: React.FC<INavbarProps> = ({ footer }) => {
+const Navbar: React.FC<INavbarProps> = ({ footer, totalQuantity }) => {
   const activeLink = 'nav-list__link nav-list__link--active';
   const normalLink = 'nav-list__link';
 
@@ -20,20 +22,20 @@ const Navbar: React.FC<INavbarProps> = ({ footer }) => {
 
           <ul className="nav-list">
             <li className="nav-list__item">
-              {/* <NavLink
-                to="catalog"
+              <NavLink
+                to={{ pathname: "/", hash: "#catalog" }}
                 className={({ isActive }) =>
-                  isActive ? activeLink : normalLink
+                  isActive && location.hash == "#catalog" ? activeLink : normalLink
                 }
-              > */}
-                <a href="#catalog">Catalog</a>
-							{/* </NavLink> */}
+              >
+                Catalog
+							</NavLink>
             </li>
             <li className="nav-list__item">
               <NavLink
-                to="/#faq"
+                to={{ pathname: "/", hash: "#faq" }}
                 className={({ isActive }) =>
-                  isActive ? activeLink : normalLink
+                  isActive && location.hash == "#faq" ? activeLink : normalLink
                 }
               >
                 FAQ
@@ -46,8 +48,12 @@ const Navbar: React.FC<INavbarProps> = ({ footer }) => {
                   `nav-list__item-cart ${isActive ? activeLink : normalLink}`
                 }
               >
-                Cart<span><img src="src/assets/icons/cart.svg" alt="Cart" /><span className="nav-list__cart-quantity">1</span></span>
-							</NavLink>
+                Cart
+                <span>
+                  <img src="src/assets/icons/cart.svg" alt="Cart" />
+                  {totalQuantity && <span className="nav-list__cart-quantity">{totalQuantity}</span>}
+                </span>
+              </NavLink>
             </li>
             <li className="nav-list__item nav-list__item-login">
               Johnson Smith
