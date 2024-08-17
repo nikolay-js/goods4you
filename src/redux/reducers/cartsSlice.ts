@@ -93,7 +93,8 @@ export const updateProduct = createCartsAsyncThunk(
           products: [
             {
               id: productId,
-              quantity: dec ? -1 : 1,
+              quantity: 1,
+              dec
             },
           ]
         })
