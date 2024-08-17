@@ -16,14 +16,14 @@ interface IProductPage {
 };
 
 const Product: React.FC<IProductPage> = ({ me, isMe }) => {
-  const { id } = useParams();
+  const { id = '' } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const [mainImg, setMainImg] = useState<string>('');
   const { carts = [], isLoading: isLoadingCart } = useAppSelector((state) => state.cartReducer);
-  const { data = [], error, isLoading, isSuccess, isError, status } = useGetProductsByIdQuery({ id, authorization: me }, { skip: !isMe, refetchOnMountOrArgChange: true });
-  const product: IProduct = data;
-  const discountValue = (product.price - (product.price * product?.discountPercentage / 100)).toFixed(2);
+  const { data, error, isSuccess, isError, status } = useGetProductsByIdQuery({ id, authorization: me }, { skip: !isMe, refetchOnMountOrArgChange: true });
+  const product = data as unknown as IProduct;
+  const discountValue = (product.price - (product.price * (product?.discountPercentage ?? 0) / 100)).toFixed(2);
   const cartId = carts?.[0]?.id;
   const cartProducts = carts?.[0]?.products ?? [];
   const quantityProductInCart = cartProducts.find((item: IProduct) => item.id === Number(id))?.quantity;
@@ -33,11 +33,15 @@ const Product: React.FC<IProductPage> = ({ me, isMe }) => {
   }, [status]);
 
   useEffect(() => {
-    setMainImg(product?.images?.[0]);
+    setMainImg(product?.images?.[0] ?? '');
   }, [product?.images?.[0]]);
 
   useEffect(() => {
-    if (isError) alert('error' in error ? error.error : error.data.message);
+    if (isError) {
+      if ('error' in error) alert(error.error);
+      if ('data' in error && typeof error.data === 'object' && error.data && 'message' in error.data) alert(error.data.message);
+      if ('message' in error) alert(error.message);
+    }
   }, [isError]);
 
   return (
@@ -48,9 +52,9 @@ const Product: React.FC<IProductPage> = ({ me, isMe }) => {
           {isSuccess && <div className="product-page">
             <div className="product-page__galery">
               <img src={mainImg} alt="Main image of galery" />
-              {product.images.length > 1 &&
+              {(product?.images ?? []).length > 1 &&
                 <ul className="galery__scroll">
-                  {product.images.map((image, index) => (
+                  {(product?.images ?? []).map((image, index) => (
                     <img
                       key={index}
                       className={`galery__scroll-item${image === mainImg ? '--active' : ''}`}
@@ -69,11 +73,11 @@ const Product: React.FC<IProductPage> = ({ me, isMe }) => {
                     {[...Array(5)].map((_, index) => {
                       index += 1;
                       return (
-                        <img key={index} className="product-page__star" src={`/src/assets/img/star${index <= Math.round(product.rating) ? '-on' : ''}.png`} alt="Star" />
+                        <img key={index} className="product-page__star" src={`/src/assets/img/star${index <= Math.round(product?.rating ?? 0) ? '-on' : ''}.png`} alt="Star" />
                       );
                     })}
                   </div>
-                  <span className="product-page__rating-text">{product?.tags.join(' ')}</span>
+                  <span className="product-page__rating-text">{(product?.tags ?? []).join(' ')}</span>
                 </div>
               </div>
               <div className="product-page__in-stock">In Stock - Only {product?.stock} left!</div>

@@ -7,6 +7,7 @@ import { IProduct } from "../types";
 import { useFetchProductsQuery } from "../redux/services/productsApi";
 import useDebounce from "../hooks/useDebounce";
 import Loader from "../components/loader/loader";
+import { ICart } from "../redux/reducers/cartsSlice";
 
 interface IHome {
 	me: string,
@@ -17,7 +18,8 @@ const Home: React.FC<IHome> = ({ me, isMe }) => {
 	const [limit, setLimit] = useState<number>(0);
 	const [search, setSearch] = useState<string>('');
 	const [searchTerm, setSearchTerm] = useState<string | undefined>(undefined);
-	const { data: { products = [], total: totalProducts = 0 } = {}, error, isLoading, isFetching, isSuccess, isError } = useFetchProductsQuery({ search, skip: limit, authorization: me }, { skip: !isMe, refetchOnMountOrArgChange: true });
+	const { data = {}, error, isLoading, isFetching, isSuccess, isError } = useFetchProductsQuery({ search, skip: limit, authorization: me }, { skip: !isMe, refetchOnMountOrArgChange: true });
+	const { products = [], total: totalProducts = 0 } = data as ICart;
 	const [productsOnPage, setProducts] = useState<Array<IProduct>>(products);
 
 	useEffect(() => {
@@ -28,9 +30,11 @@ const Home: React.FC<IHome> = ({ me, isMe }) => {
 	}, [isLoading, isFetching, isSuccess, products.length, searchTerm, limit]);
 
 	useDebounce(() => {
-		setSearch(searchTerm);
-		setProducts([]);
-		setLimit(0);
+		if (searchTerm) {
+			setSearch(searchTerm);
+			setProducts([]);
+			setLimit(0);
+		}
 	}, [searchTerm], 800);
 
 	const handleInputSearch = (e: ChangeEvent<HTMLInputElement>) => {
@@ -38,7 +42,11 @@ const Home: React.FC<IHome> = ({ me, isMe }) => {
 	}
 
 	useEffect(() => {
-		if (isError) alert('error' in error ? error.error : error.data.message);
+		if (isError) {
+			if ('error' in error) alert(error.error);
+			if ('data' in error && typeof error.data === 'object' && error.data && 'message' in error.data) alert(error.data.message);
+			if ('message' in error) alert(error.message);
+		}
 	}, [isError]);
 
 	return (

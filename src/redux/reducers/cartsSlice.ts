@@ -1,7 +1,8 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { IProduct, IUser } from "../../types";
+import { RootState, AppDispatch } from "../store";
 
-interface ICart {
+export interface ICart {
   discountedTotal: number;
   id: number;
   products: Array<IProduct>;
@@ -13,21 +14,27 @@ interface ICart {
 
 interface ICartState {
   carts: Array<ICart>;
-  user: IUser,
+  user: IUser | {},
   isLoading: boolean;
   error: string;
 };
 
 const initialState: ICartState = {
   carts: [],
-  user: undefined,
+  user: {},
   isLoading: false,
   error: '',
 };
 
 const token = JSON.parse(localStorage.getItem('goods4you') || '{}');
 
-export const fetchUserCart = createAsyncThunk(
+const createCartsAsyncThunk = createAsyncThunk.withTypes<{
+  state: RootState
+  dispatch: AppDispatch
+  rejectValue: string
+}>();
+
+export const fetchUserCart = createCartsAsyncThunk(
   'cart/fetchCart',
   async (userId: number, thunkAPI) => {
     try {
@@ -44,7 +51,7 @@ export const fetchUserCart = createAsyncThunk(
   },
 );
 
-export const addProduct = createAsyncThunk(
+export const addProduct = createCartsAsyncThunk(
   "cart/addProduct",
   async ({ cartId, productId }: { cartId: number, productId: number }, { rejectWithValue }) => {
     try {
@@ -71,7 +78,7 @@ export const addProduct = createAsyncThunk(
   }
 );
 
-export const updateProduct = createAsyncThunk(
+export const updateProduct = createCartsAsyncThunk(
   "cart/updateProduct",
   async ({ cartId, productId, dec }: { cartId: number, productId: number, dec?: boolean }, { rejectWithValue }) => {
     try {
@@ -86,7 +93,7 @@ export const updateProduct = createAsyncThunk(
           products: [
             {
               id: productId,
-              quantity: 1,
+              quantity: dec ? -1 : 1,
             },
           ]
         })
@@ -98,7 +105,7 @@ export const updateProduct = createAsyncThunk(
   }
 );
 
-export const deleteProduct = createAsyncThunk(
+export const deleteProduct = createCartsAsyncThunk(
   "cart/deleteProduct",
   async ({ cartId, productId }: { cartId: number, productId: number }, { rejectWithValue }) => {
     try {
@@ -139,7 +146,7 @@ export const cartSlice = createSlice({
         state.error = '';
         state.carts = action.payload.carts;
       })
-      .addCase(fetchUserCart.pending, (state, action) => {
+      .addCase(fetchUserCart.pending, (state) => {
         state.isLoading = true;
       })
       .addCase(fetchUserCart.rejected, (state, action) => {
@@ -166,7 +173,7 @@ export const cartSlice = createSlice({
         state.carts[0].totalProducts += action.payload.totalProducts;
         state.carts[0].totalQuantity += action.payload.totalQuantity;
       })
-      .addCase(addProduct.pending, (state, action) => {
+      .addCase(addProduct.pending, (state) => {
         state.isLoading = true;
       })
       .addCase(addProduct.rejected, (state, action) => {
@@ -180,6 +187,7 @@ export const cartSlice = createSlice({
           arg: { dec, productId: id },
         } = action.meta;
         let product = state.carts[0].products.find(product => product.id === id);
+        if (!product) return
         if (!dec) {
           product.quantity += action.payload.products[0].quantity;
           product.total += action.payload.products[0].total;
@@ -189,17 +197,17 @@ export const cartSlice = createSlice({
           state.carts[0].discountedTotal += action.payload.discountedTotal;
           state.carts[0].totalQuantity += action.payload.totalQuantity;
         } else {
-          product.quantity -= action.payload.products[0].quantity;
-          product.total -= action.payload.products[0].total;
-          product.discountPercentage -= action.payload.products[0].discountPercentage;
-          product.discountedTotal -= action.payload.products[0].discountedPrice;
+          if (product.quantity) product.quantity -= action.payload.products[0].quantity;
+          if (product.total) product.total -= action.payload.products[0].total;
+          if (product.discountPercentage) product.discountPercentage -= action.payload.products[0].discountPercentage;
+          if (product.discountedTotal) product.discountedTotal -= action.payload.products[0].discountedPrice;
           state.carts[0].total -= action.payload.total;
           state.carts[0].discountedTotal -= action.payload.discountedTotal;
           state.carts[0].totalQuantity -= action.payload.totalQuantity;
           if (product.quantity === 0) state.carts[0].totalProducts -= 1;
         }
       })
-      .addCase(updateProduct.pending, (state, action) => {
+      .addCase(updateProduct.pending, (state) => {
         state.isLoading = true;
       })
       .addCase(updateProduct.rejected, (state, action) => {
@@ -213,18 +221,19 @@ export const cartSlice = createSlice({
           arg: { productId: id },
         } = action.meta;
         let product = state.carts[0].products.find(product => product.id === id);
+        if (!product) return
         if (id) {
-          state.carts[0].total -= product.total;
-          state.carts[0].discountedTotal -= product.discountedTotal;
+          if (product.total) state.carts[0].total -= product.total;
+          if (product.discountedTotal) state.carts[0].discountedTotal -= product.discountedTotal;
           state.carts[0].totalProducts -= 1;
-          state.carts[0].totalQuantity -= product.quantity;
+          if (product.quantity) state.carts[0].totalQuantity -= product.quantity;
           product.quantity = 0;
           product.total = 0;
           product.discountPercentage = 0;
           product.discountedTotal = 0;
         }
       })
-      .addCase(deleteProduct.pending, (state, action) => {
+      .addCase(deleteProduct.pending, (state) => {
         state.isLoading = true;
       })
       .addCase(deleteProduct.rejected, (state, action) => {
