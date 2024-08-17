@@ -79,21 +79,21 @@ const Home: React.FC<IHome> = ({ me, isMe }) => {
 					<details className="faq__details">
 						<summary className="faq__summary">
 							How can I track the status of my order?
-						<img src="src/assets/icons/+.svg" alt="Open summary" />
+						<img src="./images/icons/+.svg" alt="Open summary" />
 						</summary>
 						<p>After placing your order, you will receive a confirmation email containing your order number and a tracking link. You can also log in to your account on our website and go to the "My Orders" section to track your delivery status.</p>
 					</details>
 					<details className="faq__details">
 						<summary className="faq__summary">
 							What payment methods do you accept?
-						<img src="src/assets/icons/+.svg" alt="Open summary" />
+						<img src="./images/icons/+.svg" alt="Open summary" />
 						</summary>
 						<p>After placing your order, you will receive a confirmation email containing your order number and a tracking link. You can also log in to your account on our website and go to the "My Orders" section to track your delivery status.</p>
 					</details>
 					<details className="faq__details">
 						<summary className="faq__summary">
 							How can I return or exchange an item?
-						<img src="src/assets/icons/+.svg" alt="Open summary" />
+						<img src="./images/icons/+.svg" alt="Open summary" />
 						</summary>
 						<p>After placing your order, you will receive a confirmation email containing your order number and a tracking link. You can also log in to your account on our website and go to the "My Orders" section to track your delivery status.</p>
 					</details>

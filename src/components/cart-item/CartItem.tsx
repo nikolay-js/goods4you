@@ -48,7 +48,7 @@ const CartItem: React.FC<ICartItem> = ({ product, cartId, isLoading }) => {
             disabled={isLoading}
             onClick={() => dispatch(addProduct({ cartId, productId: id }))}
           >
-            <img src="src/assets/icons/cart.svg" alt="Add to cart button" />
+            <img src="./images/icons/cart.svg" alt="Add to cart button" />
           </Button>
         )}
     </li>

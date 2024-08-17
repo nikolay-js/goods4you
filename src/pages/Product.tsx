@@ -73,7 +73,7 @@ const Product: React.FC<IProductPage> = ({ me, isMe }) => {
                     {[...Array(5)].map((_, index) => {
                       index += 1;
                       return (
-                        <img key={index} className="product-page__star" src={`/src/assets/img/star${index <= Math.round(product?.rating ?? 0) ? '-on' : ''}.png`} alt="Star" />
+                        <img key={index} className="product-page__star" src={`/./images/img/star${index <= Math.round(product?.rating ?? 0) ? '-on' : ''}.png`} alt="Star" />
                       );
                     })}
                   </div>

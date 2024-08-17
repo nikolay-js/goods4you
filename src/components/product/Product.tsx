@@ -49,7 +49,7 @@ const Product: React.FC<IProductItem> = ({ product }) => {
               className="btn product__btn"
               onClick={() => dispatch(addProduct({ cartId, productId: id }))}
             >
-              <img src="src/assets/icons/cart.svg" alt="Add to cart button" />
+              <img src="./images/icons/cart.svg" alt="Add to cart button" />
             </Button>
           )}
       </div>

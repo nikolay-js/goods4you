@@ -17,7 +17,7 @@ const Cart: React.FC = () => {
             {!cart ? (
               <Loader />
             ) : (
-                cart.products.length === 0 ? (
+                products?.length === 0 ? (
                   <p>No items</p>
                 ) : (
                     <>

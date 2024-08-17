@@ -26,7 +26,7 @@ const ProductControl: React.FC<IProductControl> = ({ product, isLoading, cartId,
         className="product-control__btn"
         onClick={() => dispatch(updateProduct({ cartId, productId, dec: true }))}
       >
-        <img src="src/assets/icons/-.svg" alt="- button" />
+        <img src="./images/icons/-.svg" alt="- button" />
       </Button>
       <span className="product-control__quantity">
         {quantityProductInCart} {`${quantityProductInCart > 1 ? 'items' : 'item'}`}
@@ -38,7 +38,7 @@ const ProductControl: React.FC<IProductControl> = ({ product, isLoading, cartId,
         className="product-control__btn"
         onClick={() => dispatch(updateProduct({ cartId, productId }))}
       >
-        <img src="src/assets/icons/+.svg" alt="+ button" />
+        <img src="./images/icons/+.svg" alt="+ button" />
       </Button>
     </div>
   );
