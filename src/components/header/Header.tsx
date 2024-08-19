@@ -9,7 +9,7 @@ const Header: React.FC = () => {
           <img className="header__img" src="./images/img/header-bg.png" alt="goods4you text" />
           <h1 className="header__title">Any products from famous brands with worldwide delivery</h1>
           <p className="header__text">We sell smartphones, laptops, clothes, shoes and many other products at low prices</p>
-          <Button href="#catalog" className="header-btn">Go to shopping</Button>
+          <Button href="#/#catalog" className="header-btn">Go to shopping</Button>
         </div>
       </div>
     </header>

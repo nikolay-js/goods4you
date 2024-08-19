@@ -30,7 +30,7 @@ const Home: React.FC<IHome> = ({ me, isMe }) => {
 	}, [isLoading, isFetching, isSuccess, products.length, searchTerm, limit]);
 
 	useDebounce(() => {
-		if (searchTerm) {
+		if (typeof searchTerm != 'undefined') {
 			setSearch(searchTerm);
 			setProducts([]);
 			setLimit(0);
@@ -69,8 +69,9 @@ const Home: React.FC<IHome> = ({ me, isMe }) => {
 									);
 								})}
 							</ul>
+							{(!isLoading && !isFetching && productsOnPage.length === 0) && <p>Products not found</p>}
 							{(!isLoading && isFetching) && <Loader />}
-							{(totalProducts !== productsOnPage?.length) && <Button disabled={isLoading || isFetching} className="catalog-btn" onClick={() => setLimit(limit + 12)}>Show more</Button>}
+							{(!isLoading && !isFetching && totalProducts !== productsOnPage?.length) && <Button disabled={isLoading || isFetching} className="catalog-btn" onClick={() => setLimit(limit + 12)}>Show more</Button>}
 						</div>
 					</div>
 				</section>

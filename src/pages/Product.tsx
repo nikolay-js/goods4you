@@ -23,7 +23,7 @@ const Product: React.FC<IProductPage> = ({ me, isMe }) => {
   const { carts = [], isLoading: isLoadingCart } = useAppSelector((state) => state.cartReducer);
   const { data, error, isSuccess, isError, status } = useGetProductsByIdQuery({ id, authorization: me }, { skip: !isMe, refetchOnMountOrArgChange: true });
   const product = data as unknown as IProduct;
-  const discountValue = (product.price - (product.price * (product?.discountPercentage ?? 0) / 100)).toFixed(2);
+  const discountValue = (product?.price - (product?.price * (product?.discountPercentage ?? 0) / 100)).toFixed(2);
   const cartId = carts?.[0]?.id;
   const cartProducts = carts?.[0]?.products ?? [];
   const quantityProductInCart = cartProducts.find((item: IProduct) => item.id === Number(id))?.quantity;
@@ -73,7 +73,7 @@ const Product: React.FC<IProductPage> = ({ me, isMe }) => {
                     {[...Array(5)].map((_, index) => {
                       index += 1;
                       return (
-                        <img key={index} className="product-page__star" src={`/./images/img/star${index <= Math.round(product?.rating ?? 0) ? '-on' : ''}.png`} alt="Star" />
+                        <img key={index} className="product-page__star" src={`./images/img/star${index <= Math.round(product?.rating ?? 0) ? '-on' : ''}.png`} alt="Star" />
                       );
                     })}
                   </div>
