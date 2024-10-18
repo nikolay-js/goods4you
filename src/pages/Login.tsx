@@ -18,7 +18,7 @@ const Login: React.FC<ILogin> = ({ setIsAuth }) => {
 
   useEffect(() => {
     if (isSuccess) {
-      localStorage.setItem('goods4you', JSON.stringify(data.token));
+      localStorage.setItem('goods4you', JSON.stringify(data.accessToken));
       setIsAuth(true);
       navigate(from, { replace: true });
     };
