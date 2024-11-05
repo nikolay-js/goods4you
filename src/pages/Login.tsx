@@ -44,8 +44,8 @@ const Login: React.FC<ILogin> = ({ setIsAuth }) => {
         <div className="login">
           <h2 className="title-1">Sign in</h2>
           <form className="login__form" onSubmit={handleSubmit}>
-            <Input disabled={isLoading} type="text" placeholder="Login" name="username" required />
-            <Input disabled={isLoading} type="password" placeholder="Password" name="password" required />
+            <Input disabled={isLoading} type="text" placeholder="Login" name="username" required autoComplete="username"/>
+            <Input disabled={isLoading} type="password" placeholder="Password" name="password" required autoComplete="current-password" />
             {(error && 'data' in error && typeof error.data === 'object' && error.data && 'message' in error.data && error.data.message === 'Invalid credentials') && <div className="login__form-error">{error.data.message}</div>}
             <Button disabled={isLoading} type="submit" className="login__form-btn">Sign in</Button>
           </form>

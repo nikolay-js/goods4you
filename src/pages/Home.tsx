@@ -76,28 +76,30 @@ const Home: React.FC<IHome> = ({ me, isMe }) => {
 					</div>
 				</section>
 				<section id="faq" className="faq">
-					<h3 className="faq__title">FAQ</h3>
-					<details className="faq__details">
-						<summary className="faq__summary">
-							How can I track the status of my order?
+					<div className="faq__wrapper">
+						<h3 className="faq__title">FAQ</h3>
+						<details className="faq__details">
+							<summary className="faq__summary">
+								How can I track the status of my order?
 						<img src="./images/icons/+.svg" alt="Open summary" />
-						</summary>
-						<p>After placing your order, you will receive a confirmation email containing your order number and a tracking link. You can also log in to your account on our website and go to the "My Orders" section to track your delivery status.</p>
-					</details>
-					<details className="faq__details">
-						<summary className="faq__summary">
-							What payment methods do you accept?
+							</summary>
+							<p>After placing your order, you will receive a confirmation email containing your order number and a tracking link. You can also log in to your account on our website and go to the "My Orders" section to track your delivery status.</p>
+						</details>
+						<details className="faq__details">
+							<summary className="faq__summary">
+								What payment methods do you accept?
 						<img src="./images/icons/+.svg" alt="Open summary" />
-						</summary>
-						<p>After placing your order, you will receive a confirmation email containing your order number and a tracking link. You can also log in to your account on our website and go to the "My Orders" section to track your delivery status.</p>
-					</details>
-					<details className="faq__details">
-						<summary className="faq__summary">
-							How can I return or exchange an item?
+							</summary>
+							<p>After placing your order, you will receive a confirmation email containing your order number and a tracking link. You can also log in to your account on our website and go to the "My Orders" section to track your delivery status.</p>
+						</details>
+						<details className="faq__details">
+							<summary className="faq__summary">
+								How can I return or exchange an item?
 						<img src="./images/icons/+.svg" alt="Open summary" />
-						</summary>
-						<p>After placing your order, you will receive a confirmation email containing your order number and a tracking link. You can also log in to your account on our website and go to the "My Orders" section to track your delivery status.</p>
-					</details>
+							</summary>
+							<p>After placing your order, you will receive a confirmation email containing your order number and a tracking link. You can also log in to your account on our website and go to the "My Orders" section to track your delivery status.</p>
+						</details>
+					</div>
 				</section>
 			</main>
 		</>
